@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
 
 const app = express();
@@ -22,7 +22,8 @@ app.get("/api/health", (req, res) => {
 
 // авторизация
 app.use("/api/auth", authRoutes);
-
+//продукты
+app.use("/api/products", productRoutes);
 // корневой роут
 app.get("/", (req, res) => {
   res.send("Lunar Glow Backend Running!");
