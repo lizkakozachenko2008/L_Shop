@@ -1,0 +1,223 @@
+[
+  {
+    "id": "1",
+    "title": "Крем для лица Glow Serum",
+    "description": "Увлажняющий сыворотка с витамином C",
+    "price": 77,
+    "discountPercentage": 15,
+    "rating": 4.8,
+    "stock": 50,
+    "brand": "Lunar Beauty",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "2",
+    "title": "Помада Matte Lipstick",
+    "description": "Матовая помада стойкая 24 часа",
+    "price": 37,
+    "discountPercentage": 10,
+    "rating": 4.5,
+    "stock": 0,
+    "brand": "Glow Cosmetics",
+    "category": "Макияж"
+  },
+  {
+    "id": "3",
+    "title": "Тонер Dokdo 1025",
+    "description": "Увлажняющий тонер с морской водой Dokdo",
+    "price": 55,
+    "discountPercentage": 10,
+    "rating": 4.7,
+    "stock": 30,
+    "brand": "Round Lab",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "4",
+    "title": "Крем Mugwort Calming",
+    "description": "Успокаивающий крем с экстрактом полыни",
+    "price": 68,
+    "discountPercentage": 15,
+    "rating": 4.6,
+    "stock": 0,
+    "brand": "Round Lab",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "5",
+    "title": "Сыворотка Hyalu-Cica",
+    "description": "Увлажняющая сыворотка с центеллой и гиалуронкой",
+    "price": 65,
+    "discountPercentage": 12,
+    "rating": 4.8,
+    "stock": 45,
+    "brand": "Skin1004",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "6",
+    "title": "Крем Centella Madagascar",
+    "description": "Восстанавливающий крем с маслом ши и церамидами",
+    "price": 58,
+    "discountPercentage": 8,
+    "rating": 4.5,
+    "stock": 12,
+    "brand": "Skin1004",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "7",
+    "title": "Крем Pore+Dark Spot",
+    "description": "Осветляющий крем от пигментации и пор",
+    "price": 74,
+    "discountPercentage": 20,
+    "rating": 4.9,
+    "stock": 25,
+    "brand": "Celimax",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "8",
+    "title": "Сыворотка Vita-A Retinol",
+    "description": "Подтягивающая сыворотка с ретинолом и спикулами",
+    "price": 86,
+    "discountPercentage": 18,
+    "rating": 4.7,
+    "stock": 0,
+    "brand": "Celimax",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "9",
+    "title": "Мицеллярная вода Sensibio",
+    "description": "Деликатное очищение для чувствительной кожи",
+    "price": 43,
+    "discountPercentage": 5,
+    "rating": 4.6,
+    "stock": 60,
+    "brand": "Bioderma",
+    "category": "Очищение"
+  },
+  {
+    "id": "10",
+    "title": "Крем 345 Relief Cream",
+    "description": "Успокаивающий крем для чувствительной кожи с центеллой",
+    "price": 62,
+    "discountPercentage": 10,
+    "rating": 4.8,
+    "stock": 20,
+    "brand": "Dr.Althea",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "11",
+    "title": "Сыворотка Hyalu B5 Toleriane",
+    "description": "Увлажняющая сыворотка с гиалуронкой для чувствительной кожи",
+    "price": 98,
+    "discountPercentage": 15,
+    "rating": 4.8,
+    "stock": 35,
+    "brand": "La Roche-Posay",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "12",
+    "title": "Термальная вода",
+    "description": "Успокаивающая спрей-мист для лица и тела",
+    "price": 34,
+    "discountPercentage": 10,
+    "rating": 4.7,
+    "stock": 0,
+    "brand": "Avene",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "13",
+    "title": "BB-крем с SPF30",
+    "description": "Тонирующий уходовый крем для лица",
+    "price": 80,
+    "discountPercentage": 12,
+    "rating": 4.3,
+    "stock": 22,
+    "brand": "La Roche-Posay",
+    "category": "Макияж"
+  },
+  {
+    "id": "14",
+    "title": "Пенка Dokdo Cleanser",
+    "description": "Мягкая умывалка с морской водой и гиалуронкой",
+    "price": 46,
+    "discountPercentage": 10,
+    "rating": 4.7,
+    "stock": 40,
+    "brand": "Round Lab",
+    "category": "Очищение"
+  },
+  {
+    "id": "15",
+    "title": "Стик- маска Poremizing",
+    "description": "Розовая глина-стик для очищения пор с центеллой",
+    "price": 52,
+    "discountPercentage": 15,
+    "rating": 4.6,
+    "stock": 15,
+    "brand": "Skin1004",
+    "category": "Маски"
+  },
+  {
+    "id": "16",
+    "title": "Сыворотка Tea Tree Relief",
+    "description": "Зеленая успокаивающая сыворотка с чайным деревом и центеллой",
+    "price": 60,
+    "discountPercentage": 12,
+    "rating": 4.7,
+    "stock": 28,
+    "brand": "Skin1004",
+    "category": "Уход за лицом"
+  },
+  {
+    "id": "17",
+    "title": "Шампунь для жирных волос",
+    "description": "Регулирующий шампунь для волос",
+    "price": 39,
+    "discountPercentage": 8,
+    "rating": 4.4,
+    "stock": 55,
+    "brand": "Bioderma",
+    "category": "Уход за волосами"
+  },
+  {
+    "id": "18",
+    "title": "Масло для тела Cica",
+    "description": "Увлажняющее масло с центеллой",
+    "price": 71,
+    "discountPercentage": 18,
+    "rating": 4.5,
+    "stock": 0,
+    "brand": "Dr.Althea",
+    "category": "Уход за телом"
+  },
+  {
+    "id": "19",
+    "title": "Солнцезащитный крем SPF50",
+    "description": "Легкий крем с минеральными фильтрами",
+    "price": 85,
+    "discountPercentage": 20,
+    "rating": 4.9,
+    "stock": 32,
+    "brand": "Avene",
+    "category": "Солнцезащита"
+  },
+  {
+    "id": "20",
+    "title": "Патчи под глаза Hydrogel",
+    "description": "Гидрогелевые патчи с гиалуронкой",
+    "price": 42,
+    "discountPercentage": 10,
+    "rating": 4.6,
+    "stock": 10,
+    "brand": "Celimax",
+    "category": "Уход за лицом"
+  }
+  
+]
