@@ -2,18 +2,30 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+import authRoutes from "./routes/authRoutes";
+
 const app = express();
 const PORT = 5000;
 
-// Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// Глобальные middleware
+app.use(cors({ 
+  origin: "http://localhost:3000", // НЕ ЗАБЫТЬ ЗАМЕНИТЬ на порт фронта
+  credentials: true 
+}));
 app.use(express.json());
 app.use(cookieParser());
 
-
-// Тестовый роут
+// Тестовый health-check
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Backend is running!" });
+});
+
+// авторизация
+app.use("/api/auth", authRoutes);
+
+// корневой роут
+app.get("/", (req, res) => {
+  res.send("Lunar Glow Backend Running!");
 });
 
 app.listen(PORT, () => {
