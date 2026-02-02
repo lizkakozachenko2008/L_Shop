@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
-
+import cartRoutes from "./routes/cartRoutes";
 const app = express();
 const PORT = 5000;
 
@@ -28,6 +28,8 @@ app.use("/api/products", productRoutes);
 app.get("/", (req, res) => {
   res.send("Lunar Glow Backend Running!");
 });
+// корзина
+app.use("/api/cart", cartRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
