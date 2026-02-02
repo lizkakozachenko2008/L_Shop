@@ -1,0 +1,19 @@
+[
+  {
+    "id": "76347b45-4604-4127-85a9-588c58ef0dce",
+    "userId": "8ea79068-8839-4051-87f6-a37172e19612",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 2,
+        "priceAtPurchase": 77
+      }
+    ],
+    "totalAmount": 154,
+    "deliveryAddress": "Минск, ул. Колесникова, 123",
+    "deliveryPhone": "+375443459877",
+    "deliveryEmail": "liza@test.com",
+    "paymentMethod": "card",
+    "createdAt": 1770067717572
+  }
+]
