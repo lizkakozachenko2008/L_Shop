@@ -4,6 +4,10 @@ import cookieParser from "cookie-parser";
 import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
 import cartRoutes from "./routes/cartRoutes";
+import orderRoutes from "./routes/orderRoutes";
+
+
+
 const app = express();
 const PORT = 5000;
 
@@ -22,14 +26,20 @@ app.get("/api/health", (req, res) => {
 
 // авторизация
 app.use("/api/auth", authRoutes);
+
 //продукты
 app.use("/api/products", productRoutes);
+
 // корневой роут
 app.get("/", (req, res) => {
   res.send("Lunar Glow Backend Running!");
 });
+
 // корзина
 app.use("/api/cart", cartRoutes);
+
+//заказы
+app.use("/api/orders", orderRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
