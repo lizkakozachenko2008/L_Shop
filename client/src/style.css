@@ -1,27 +1,122 @@
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: Arial, sans-serif;
-  background: #f5efff; /* нежный лавандовый фон для косметики */
+  background: #f5efff;
   color: #333;
 }
 
 #app {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+}
+
+.header {
+  background: #a78bfa;
+  color: white;
+  padding: 20px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
+.header-left h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.header-left a {
+  color: white;
+  text-decoration: none;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 40px; /* расстояние между элементами */
+}
+
+.cart-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-svg {
+  width: 28px;
+  height: 28px;
+  stroke: white;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -7px;
+  right: -12px;
+  background: #ff6b6b;
+  color: white;
+  font-size: 10px;
+  padding: 1px 2px;       
+  border-radius: 10px;
+  min-width: 18px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.header-nav a, .header-nav span {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.header-nav a:hover {
+  text-decoration: underline;
+}
+
+.cart-icon {
+  font-size: 24px;
+}
+
+.cart-count {
+  background: white;
+  color: #a78bfa;
+  border-radius: 50%;
+  padding: 2px 8px;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px;
+}
+
+/* Форма логина */
 .login-page {
   background: white;
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   width: 380px;
   text-align: center;
 }
