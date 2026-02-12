@@ -1,9 +1,23 @@
 import { api, handleResponse } from "../services/api";
-//import { navigate } from "../router/router";
+import { navigate } from "../router/router";
 
 export const LoginPage = (): HTMLElement => {
   const container = document.createElement("div");
   container.className = "login-page";
+
+  const checkAuthAndRedirect = async () => {
+    try {
+      const res = await api.auth.me();
+      await handleResponse(res);
+      navigate("/"); // уже залогинен — на главную
+      return true;
+    } catch {
+      // не авторизован — показываем форму
+      return false;
+    }
+  };
+
+  checkAuthAndRedirect();
 
   container.innerHTML = `
     <h1>Lunar Glow</h1>
@@ -39,7 +53,7 @@ export const LoginPage = (): HTMLElement => {
       ? "Уже есть аккаунт? <a href=\"#\" id=\"toggle-link\">Вход</a>" 
       : "Нет аккаунта? <a href=\"#\" id=\"toggle-link\">Регистрация</a>";
     
-    // Перепривязываем listener к новому link (поскольку innerHTML перезаписывает элемент)
+    // Перепривязываем listener к новому link
     const newToggleLink = toggleText.querySelector("#toggle-link") as HTMLAnchorElement;
     newToggleLink.addEventListener("click", (e) => {
       e.preventDefault();
@@ -79,10 +93,11 @@ export const LoginPage = (): HTMLElement => {
         const res = await api.auth.login({ email, password });
         await handleResponse(res);
       }
-      location.reload(); // обновит страницу после успеха
-      alert("Успешно!");
-    } catch (err) {
-      alert("Ошибка: неверные данные или email занят");
+      
+      navigate("/"); 
+      
+    } catch (err: any) {
+      alert(err.message || "Ошибка: неверные данные или email занят");
     }
   });
 

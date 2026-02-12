@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:5000/api";
 
 const fetchOptions = {
-  credentials: "include" as const, // для куки сессии
+  credentials: "include" as const,
   headers: {
     "Content-Type": "application/json",
   },
@@ -17,8 +17,8 @@ export const api = {
     logout: () => fetch(`${API_URL}/auth/logout`, { method: "POST", ...fetchOptions }),
   },
   products: {
-    get: (params?: Record<string, string>) => {
-      const searchParams = new URLSearchParams(params);
+    get: (params?: URLSearchParams | Record<string, string>) => {
+      const searchParams = params instanceof URLSearchParams ? params : new URLSearchParams(params);
       return fetch(`${API_URL}/products?${searchParams}`, { ...fetchOptions });
     },
   },
@@ -32,14 +32,32 @@ export const api = {
       fetch(`${API_URL}/cart/remove/${productId}`, { method: "DELETE", ...fetchOptions }),
   },
   orders: {
-    create: (data: { deliveryAddress: string; deliveryPhone: string; deliveryEmail: string; paymentMethod: string }) =>
-      fetch(`${API_URL}/orders`, { method: "POST", body: JSON.stringify(data), ...fetchOptions }),
+    // ✅ ДОБАВЛЯЕМ selectedItems В ТИП И ЗАПРОС
+    create: (data: { 
+      deliveryAddress: string; 
+      deliveryPhone: string; 
+      deliveryEmail: string; 
+      paymentMethod: string;
+      selectedItems?: string[]; // ✅ МАССИВ ID ВЫБРАННЫХ ТОВАРОВ
+    }) => 
+      fetch(`${API_URL}/orders/create`, { 
+        method: "POST", 
+        body: JSON.stringify(data), // ✅ selectedItems автоматом попадет в body
+        ...fetchOptions 
+      }),
     get: () => fetch(`${API_URL}/orders`, { ...fetchOptions }),
   },
 };
 
-// Helper для обработки ответа
 export const handleResponse = async <T>(response: Response): Promise<T> => {
-  if (!response.ok) throw new Error("Ошибка API");
+  if (!response.ok) {
+    // ✅ УЛУЧШАЕМ ОБРАБОТКУ ОШИБОК - парсим сообщение с сервера
+    try {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Ошибка API");
+    } catch {
+      throw new Error(`Ошибка API: ${response.status} ${response.statusText}`);
+    }
+  }
   return response.json();
 };
