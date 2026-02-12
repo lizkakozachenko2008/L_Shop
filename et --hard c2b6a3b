@@ -1,0 +1,70 @@
+[33m55462b7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mreview-1-src[m[33m)[m HEAD@{0}: rebase (finish): returning to refs/heads/review-1-src
+[33m55462b7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mreview-1-src[m[33m)[m HEAD@{1}: rebase (pick): feat(orders): add protected order routes
+[33md7c44ef[m HEAD@{2}: rebase (pick): feat(orders): implement createOrder with cart clearing
+[33mcc17fb8[m HEAD@{3}: rebase (pick): feat(orders): add Order type and empty orders.json
+[33m9865d9a[m HEAD@{4}: rebase (pick): feat(cart): add protected cart routes
+[33mea4748d[m HEAD@{5}: rebase (pick): feat(cart): implement cart operations (add, update, remove, get)
+[33m9fbb44c[m HEAD@{6}: rebase (pick): feat(cart): add Cart types and empty carts.json
+[33m5a86496[m HEAD@{7}: rebase (pick): feat: implement products API with filtering and pagination
+[33m09270e9[m HEAD@{8}: rebase (pick): feat: complete authentication system
+[33m7cc1849[m HEAD@{9}: rebase (pick): feat(auth): add controllers, middleware, routes, types and empty users.json
+[33ma78e953[m HEAD@{10}: rebase (pick): fix: final tsconfig for ts-node-dev compatibility (commonjs)
+[33mc2b6a3b[m HEAD@{11}: rebase (pick): Initial commit
+[33me0990e2[m HEAD@{12}: rebase (pick): Empty commit
+[33m1ac0bc0[m[33m ([m[1;31morigin/review-1-target[m[33m, [m[1;32mreview-1-target[m[33m)[m HEAD@{13}: rebase (start): checkout review-1-target
+[33m6a6e44d[m HEAD@{14}: checkout: moving from main to review-1-src
+[33m08420ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{15}: checkout: moving from review-1-target to main
+[33m1ac0bc0[m[33m ([m[1;31morigin/review-1-target[m[33m, [m[1;32mreview-1-target[m[33m)[m HEAD@{16}: commit (initial): Empty commit
+[33m6a6e44d[m HEAD@{17}: rebase (finish): returning to refs/heads/review-1-src
+[33m6a6e44d[m HEAD@{18}: rebase (pick): feat(orders): add protected order routes
+[33m616bba8[m HEAD@{19}: rebase (pick): feat(orders): implement createOrder with cart clearing
+[33me78d192[m HEAD@{20}: rebase (pick): feat(orders): add Order type and empty orders.json
+[33m6980750[m HEAD@{21}: rebase (pick): feat(cart): add protected cart routes
+[33m1ebe8a7[m HEAD@{22}: rebase (pick): feat(cart): implement cart operations (add, update, remove, get)
+[33m20da349[m HEAD@{23}: rebase (pick): feat(cart): add Cart types and empty carts.json
+[33m3a7a99c[m HEAD@{24}: rebase (pick): feat: implement products API with filtering and pagination
+[33mae05e80[m HEAD@{25}: rebase (pick): feat: complete authentication system
+[33m0d6277e[m HEAD@{26}: rebase (pick): feat(auth): add controllers, middleware, routes, types and empty users.json
+[33m62f9309[m HEAD@{27}: rebase (pick): fix: final tsconfig for ts-node-dev compatibility (commonjs)
+[33m8a32bc7[m HEAD@{28}: rebase (pick): Initial commit
+[33m3d4ef69[m HEAD@{29}: rebase (start): checkout review-1-target
+[33m08420ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{30}: checkout: moving from main to review-1-src
+[33m08420ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{31}: checkout: moving from review-1-target to main
+[33m3d4ef69[m HEAD@{32}: commit (initial): Empty commit
+[33mf24e599[m[33m ([m[1;31morigin/feature/frontend[m[33m, [m[1;32mfeature/frontend[m[33m)[m HEAD@{33}: commit: feat(frontend): improve header - SVG cart icon, badge counter, better layout
+[33mb5b1571[m HEAD@{34}: commit: fix(frontend): add Vite proxy for API, fix CORS for dev
+[33m08420ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{35}: checkout: moving from main to feature/frontend
+[33m08420ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{36}: checkout: moving from main to main
+[33m08420ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{37}: pull origin main: Fast-forward
+[33mbc40117[m HEAD@{38}: checkout: moving from feature/orders to main
+[33m767e2cd[m[33m ([m[1;31morigin/feature/orders[m[33m)[m HEAD@{39}: commit: feat(orders): add protected order routes
+[33md0d2956[m HEAD@{40}: commit: feat(orders): implement createOrder with cart clearing
+[33m7dc3ab0[m HEAD@{41}: commit: feat(orders): add Order type and empty orders.json
+[33mbc40117[m HEAD@{42}: checkout: moving from main to feature/orders
+[33mbc40117[m HEAD@{43}: checkout: moving from main to main
+[33mbc40117[m HEAD@{44}: pull origin main: Fast-forward
+[33m5906acb[m HEAD@{45}: checkout: moving from feature/cart to main
+[33m5e8f684[m[33m ([m[1;31morigin/feature/cart[m[33m)[m HEAD@{46}: commit: feat(cart): add protected cart routes
+[33mf068d9a[m HEAD@{47}: commit: feat(cart): implement cart operations (add, update, remove, get)
+[33m6a3a1d7[m HEAD@{48}: commit: feat(cart): add Cart types and empty carts.json
+[33m5906acb[m HEAD@{49}: checkout: moving from main to feature/cart
+[33m5906acb[m HEAD@{50}: checkout: moving from main to main
+[33m5906acb[m HEAD@{51}: pull origin main: Fast-forward
+[33m9193a17[m HEAD@{52}: checkout: moving from feature/products to main
+[33m39dc166[m[33m ([m[1;31morigin/feature/products[m[33m)[m HEAD@{53}: commit: feat: implement products API with filtering and pagination
+[33m9193a17[m HEAD@{54}: checkout: moving from main to feature/products
+[33m9193a17[m HEAD@{55}: checkout: moving from main to main
+[33m9193a17[m HEAD@{56}: pull origin main: Fast-forward
+[33mc93649f[m HEAD@{57}: checkout: moving from main to main
+[33mc93649f[m HEAD@{58}: checkout: moving from feature/auth to main
+[33mdc26c67[m[33m ([m[1;31morigin/feature/auth[m[33m)[m HEAD@{59}: commit: feat: complete authentication system
+[33m63940d9[m HEAD@{60}: commit: feat(auth): add controllers, middleware, routes, types and empty users.json
+[33mc93649f[m HEAD@{61}: checkout: moving from main to feature/auth
+[33mc93649f[m HEAD@{62}: checkout: moving from main to main
+[33mc93649f[m HEAD@{63}: merge feature/backend-setup: Fast-forward
+[33md997859[m HEAD@{64}: checkout: moving from feature/backend-setup to main
+[33mc93649f[m HEAD@{65}: commit: fix: final tsconfig for ts-node-dev compatibility (commonjs)
+[33md997859[m HEAD@{66}: checkout: moving from main to feature/backend-setup
+[33md997859[m HEAD@{67}: checkout: moving from review to main
+[33mdae9f92[m[33m ([m[1;32mreview[m[33m)[m HEAD@{68}: commit (initial): Initial empty commit for review branch
+[33md997859[m HEAD@{69}: clone: from https://github.com/lizkakozachenko2008/L_Shop.git

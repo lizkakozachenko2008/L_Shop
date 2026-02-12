@@ -6,7 +6,7 @@
     "price": 77,
     "discountPercentage": 15,
     "rating": 4.8,
-    "stock": 50,
+    "stock": 35,
     "brand": "Lunar Beauty",
     "category": "Уход за лицом"
   },
@@ -219,5 +219,4 @@
     "brand": "Celimax",
     "category": "Уход за лицом"
   }
-  
 ]

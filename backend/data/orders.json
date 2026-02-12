@@ -15,5 +15,85 @@
     "deliveryEmail": "liza@test.com",
     "paymentMethod": "card",
     "createdAt": 1770067717572
+  },
+  {
+    "id": "4b61fdab-0c0f-44cf-8bc0-bc72d7d97871",
+    "userId": "fcfed5ab-a8dc-4bfd-a605-2bb66aeb1e00",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 50,
+        "priceAtPurchase": 77
+      },
+      {
+        "productId": "3",
+        "quantity": 1,
+        "priceAtPurchase": 55
+      }
+    ],
+    "totalAmount": 3905,
+    "deliveryAddress": "тть",
+    "deliveryPhone": "+375259545766",
+    "deliveryEmail": "lizka.kozachenko2008@outlook.com",
+    "paymentMethod": "card",
+    "createdAt": 1770844953498
+  },
+  {
+    "id": "b50c3276-6cae-487b-8225-3818eed41c01",
+    "userId": "fcfed5ab-a8dc-4bfd-a605-2bb66aeb1e00",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 13,
+        "priceAtPurchase": 77
+      },
+      {
+        "productId": "3",
+        "quantity": 4,
+        "priceAtPurchase": 55
+      }
+    ],
+    "totalAmount": 1221,
+    "deliveryAddress": "h",
+    "deliveryPhone": "+375259545766",
+    "deliveryEmail": "lizka.kozachenko2008@outlook.com",
+    "paymentMethod": "card",
+    "createdAt": 1770878029071
+  },
+  {
+    "id": "3076f3be-bb3f-4bb8-8cd7-437b55eb5803",
+    "userId": "fcfed5ab-a8dc-4bfd-a605-2bb66aeb1e00",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 14,
+        "priceAtPurchase": 77
+      }
+    ],
+    "totalAmount": 1078,
+    "deliveryAddress": "в",
+    "deliveryPhone": "+375259545766",
+    "deliveryEmail": "lizka.kozachenko2008@outlook.com",
+    "paymentMethod": "card",
+    "createdAt": 1770878413654,
+    "status": "new"
+  },
+  {
+    "id": "9fd3376b-4438-47ff-9c19-185c1cd75f17",
+    "userId": "fcfed5ab-a8dc-4bfd-a605-2bb66aeb1e00",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 1,
+        "priceAtPurchase": 77
+      }
+    ],
+    "totalAmount": 77,
+    "deliveryAddress": "в",
+    "deliveryPhone": "+375259545766",
+    "deliveryEmail": "lizka.kozachenko2008@outlook.com",
+    "paymentMethod": "card",
+    "createdAt": 1770878431974,
+    "status": "new"
   }
 ]

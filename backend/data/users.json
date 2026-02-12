@@ -5,7 +5,16 @@
     "email": "liza@test.com",
     "phone": "+79991234567",
     "passwordHash": "$2b$10$RLA5AG1l1VkKosUTZfPuC.k4z4p9xOg1Nw1C5tyMXRfZNs2.9kXhy",
-    "sessionId": "ccc76849-c98c-4c32-9262-cf683e7b55aa",
-    "sessionExpires": 1769960075292
+    "sessionId": "314088ff-f562-4c71-936b-02f96f11e33b",
+    "sessionExpires": 1770876898014
+  },
+  {
+    "id": "fcfed5ab-a8dc-4bfd-a605-2bb66aeb1e00",
+    "name": "Лиза",
+    "email": "f10081109@mail.ru",
+    "phone": "+375259545766",
+    "passwordHash": "$2b$10$BVkL5lGE0JOPmKj.gF5ICuHYNMiH3jOPhK5Phj6wuLl8ebM6sM.RO",
+    "sessionId": "e0cc2d41-7af5-4e3d-bce8-203a1e7ea8b7",
+    "sessionExpires": 1770885949226
   }
 ]
