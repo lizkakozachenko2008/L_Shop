@@ -1,0 +1,11 @@
+[
+  {
+    "id": "8ea79068-8839-4051-87f6-a37172e19612",
+    "name": "Лиза",
+    "email": "liza@test.com",
+    "phone": "+79991234567",
+    "passwordHash": "$2b$10$RLA5AG1l1VkKosUTZfPuC.k4z4p9xOg1Nw1C5tyMXRfZNs2.9kXhy",
+    "sessionId": "ccc76849-c98c-4c32-9262-cf683e7b55aa",
+    "sessionExpires": 1769960075292
+  }
+]
