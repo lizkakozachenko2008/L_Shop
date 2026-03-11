@@ -5,6 +5,7 @@ import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
 import cartRoutes from "./routes/cartRoutes";
 import orderRoutes from "./routes/orderRoutes";
+import setupSwagger from "./swagger";
 
 const app = express();
 const PORT = 5000;
@@ -12,6 +13,8 @@ const PORT = 5000;
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+setupSwagger(app);
 
 // API роуты
 app.use("/api/auth", authRoutes);
@@ -27,5 +30,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 http://localhost:${PORT}/api/cart ← GET!`);
+  console.log(`🚀 http://localhost:${PORT}/api/cart `);
 });
