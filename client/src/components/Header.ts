@@ -1,75 +1,202 @@
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
+import { Badge } from './ui/Badge';
 import { api, handleResponse } from "../services/api";
+import type { Cart } from "../types/Cart";
+interface UserInfo {
+  name: string;
+  isLoggedIn: boolean;
+}
 
-export const Header = async (): Promise<HTMLElement> => {
-  const header = document.createElement("header");
-  header.className = "header";
 
-  let userName = "Гость";
-  let isLoggedIn = false;
-  let cartCount = 0; // TODO: потом реальный счётчик из /cart
+export class HeaderComponent {
+  private header: HTMLElement;
+  private userInfo: UserInfo = { name: 'Гость', isLoggedIn: false };
+  private cartCount: number = 0;
 
-  try {
-    const res = await api.auth.me();
-    if (res.ok) {
-      const data = await handleResponse<{ user: { name: string } }>(res);
-      userName = data.user.name;
-      isLoggedIn = true;
+  constructor() {
+    this.header = document.createElement('header');
+    this.header.className = 'header';
+  }
+
+  private async fetchUserInfo(): Promise<void> {
+    try {
+      const res = await api.auth.me();
+      if (res.ok) {
+        const data = await handleResponse<{ user: { name: string } }>(res);
+        this.userInfo = {
+          name: data.user.name,
+          isLoggedIn: true
+        };
+      } else {
+        // Пользователь не авторизован - оставляем значения по умолчанию
+        console.log('Пользователь не авторизован');
+      }
+    } catch (err) {
+      // Обработка ошибки сети или других проблем
+      console.error('Ошибка при получении информации о пользователе:', err);
+      // Оставляем значения по умолчанию (Гость, false)
     }
-  } catch (err) {
-    // не авторизован
   }
 
-  header.innerHTML = `
-    <div class="header-content container">
-      <div class="header-left">
-        <h1><a href="/" id="logo">Lunar Glow</a></h1>
-      </div>
-      <nav class="header-nav">
-        <a href="/" id="home-link">Главная</a>
-        ${isLoggedIn 
-          ? `<span>Привет, ${userName}!</span> <a href="#" id="logout-link">Выйти</a>`
-          : `<a href="/login" id="login-link">Вход / Регистрация</a>`
+  private async fetchCartCount(): Promise<void> {
+    // Если пользователь не авторизован, корзина пуста
+    if (!this.userInfo.isLoggedIn) {
+      this.cartCount = 0;
+      return;
+    }
+
+    try {
+      // Получаем реальное количество из корзины
+      const res = await api.cart.get();
+      if (res.ok) {
+        const data = await handleResponse<Cart>(res);
+        this.cartCount = data.totalItems || 0;
+      } else {
+        this.cartCount = 0;
+      }
+    } catch (err) {
+      console.error('Ошибка при получении корзины:', err);
+      this.cartCount = 0; // В случае ошибки показываем 0
+    }
+  }
+
+  private renderLogo(): HTMLElement {
+    const logo = document.createElement('h1');
+    const link = document.createElement('a');
+    link.href = '/';
+    link.id = 'logo';
+    link.textContent = 'Lunar Glow';
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.href = '/';
+    });
+    logo.appendChild(link);
+    return logo;
+  }
+
+  private renderNav(): HTMLElement {
+    const nav = document.createElement('nav');
+    nav.className = 'header-nav';
+
+    // Главная
+    const homeLink = Button({
+      text: 'Главная',
+      variant: 'outline',
+      size: 'small',
+      href: '/'
+    });
+    homeLink.id = 'home-link';
+
+    // Авторизация
+    const authSection = this.renderAuthSection();
+
+    // Корзина
+    const cartLink = this.renderCartLink();
+
+    nav.append(homeLink, authSection, cartLink);
+    return nav;
+  }
+
+  private renderAuthSection(): HTMLElement {
+    const container = document.createElement('div');
+    container.className = 'auth-section';
+
+    if (this.userInfo.isLoggedIn) {
+      const userSpan = document.createElement('span');
+      userSpan.textContent = `Привет, ${this.userInfo.name}!`;
+      
+      const logoutBtn = Button({
+        text: 'Выйти',
+        variant: 'outline',
+        size: 'small',
+        onClick: async () => {
+          try {
+            await api.auth.logout();
+            location.reload();
+          } catch (err) {
+            console.error('Ошибка при выходе:', err);
+          }
         }
-        <a href="/cart" id="cart-link" class="cart-link">
-          <svg class="cart-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="9" cy="21" r="1"/>
-            <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.7 13.5a2 2 0 0 0 2 1.5h10.6a2 2 0 0 0 2-1.5L23 4H6"/>
-          </svg>
-          <span class="cart-badge">${cartCount}</span>
-        </a>
-      </nav>
-    </div>
-  `;
+      });
+      logoutBtn.id = 'logout-link';
 
-  // Ссылки (временный location.href, потом роутер)
-  header.querySelector("#logo")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    location.href = "/";
-  });
+      container.append(userSpan, logoutBtn);
+    } else {
+      const loginLink = Button({
+        text: 'Вход / Регистрация',
+        variant: 'outline',
+        size: 'small',
+        href: '/login'
+      });
+      loginLink.id = 'login-link';
+      
+      container.appendChild(loginLink);
+    }
 
-  header.querySelector("#home-link")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    location.href = "/";
-  });
-
-  header.querySelector("#cart-link")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    location.href = "/cart";
-  });
-
-  if (isLoggedIn) {
-    header.querySelector("#logout-link")?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      await api.auth.logout();
-      location.reload();
-    });
-  } else {
-    header.querySelector("#login-link")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      location.href = "/login";
-    });
+    return container;
   }
 
-  return header;
-};
+  private renderCartLink(): HTMLElement {
+    const cartLink = document.createElement('a');
+    cartLink.href = '/cart';
+    cartLink.className = 'cart-link';
+    cartLink.id = 'cart-link';
+    
+    const icon = Icon({ name: 'cart', size: 24 });
+    const badge = Badge({ count: this.cartCount });
+    
+    cartLink.appendChild(icon);
+    cartLink.appendChild(badge);
+    
+    cartLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.href = '/cart';
+    });
+
+    return cartLink;
+  }
+
+  private renderLeftSection(): HTMLElement {
+    const left = document.createElement('div');
+    left.className = 'header-left';
+    left.appendChild(this.renderLogo());
+    return left;
+  }
+
+  public async render(): Promise<HTMLElement> {
+    // Сначала получаем информацию о пользователе
+    await this.fetchUserInfo();
+    
+    // Потом получаем корзину (учитывая авторизацию)
+    await this.fetchCartCount();
+
+    const container = document.createElement('div');
+    container.className = 'header-content container';
+    
+    container.appendChild(this.renderLeftSection());
+    container.appendChild(this.renderNav());
+    
+    this.header.innerHTML = ''; // очищаем
+    this.header.appendChild(container);
+    
+    return this.header;
+  }
+
+  // Метод для обновления счетчика корзины (можно вызвать извне)
+  public async updateCartCount(): Promise<void> {
+    await this.fetchCartCount();
+    this.updateCartBadge();
+  }
+
+  private updateCartBadge(): void {
+    const cartLink = this.header.querySelector('#cart-link');
+    if (cartLink) {
+      const oldBadge = cartLink.querySelector('.badge');
+      if (oldBadge) oldBadge.remove();
+      
+      const newBadge = Badge({ count: this.cartCount });
+      cartLink.appendChild(newBadge);
+    }
+  }
+}

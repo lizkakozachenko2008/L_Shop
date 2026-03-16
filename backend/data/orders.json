@@ -95,5 +95,23 @@
     "paymentMethod": "card",
     "createdAt": 1770878431974,
     "status": "new"
+  },
+  {
+    "id": "746729a9-f8fd-4122-b77c-6f58362bf9a3",
+    "userId": "fcfed5ab-a8dc-4bfd-a605-2bb66aeb1e00",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 1,
+        "priceAtPurchase": 77
+      }
+    ],
+    "totalAmount": 77,
+    "deliveryAddress": "fsgeg",
+    "deliveryPhone": "+375259545766",
+    "deliveryEmail": "lizka.kozachenko2008@outlook.com",
+    "paymentMethod": "card",
+    "createdAt": 1773331171197,
+    "status": "new"
   }
 ]
