@@ -5,7 +5,7 @@ import path from "path";
  * Абсолютный путь к папке data (от корня проекта)
  * @constant {string}
  */
-const DATA_DIR = path.join(process.cwd(), "backend", "data");
+const DATA_DIR = path.join(process.cwd(), "data");
 
 // Создаём папку, если её нет (при первом запуске)
 fs.mkdirSync(DATA_DIR, { recursive: true });

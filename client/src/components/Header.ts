@@ -9,7 +9,7 @@ interface UserInfo {
 }
 
 
-export class HeaderComponent {
+export class Header {
   private header: HTMLElement;
   private userInfo: UserInfo = { name: 'Гость', isLoggedIn: false };
   private cartCount: number = 0;

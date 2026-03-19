@@ -37,10 +37,10 @@ const options = {
   },
   // Используем абсолютные пути от корня проекта
   apis: [
-    path.join(process.cwd(), 'backend/src/routes/*.ts'),
-    path.join(process.cwd(), 'backend/src/controllers/*.ts'),
-    path.join(process.cwd(), 'backend/src/models/*.ts'),
-    path.join(process.cwd(), 'backend/src/server.ts'),
+    path.join(process.cwd(), 'src/routes/*.ts'),
+    path.join(process.cwd(), 'src/controllers/*.ts'),
+    path.join(process.cwd(), 'src/models/*.ts'),
+    path.join(process.cwd(), 'src/server.ts'),
   ],
 };
 
