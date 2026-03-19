@@ -32,18 +32,12 @@ export const api = {
       fetch(`${API_URL}/cart/remove/${productId}`, { method: "DELETE", ...fetchOptions }),
   },
   orders: {
-    // ✅ ДОБАВЛЯЕМ selectedItems В ТИП И ЗАПРОС
-    create: (data: { 
-      deliveryAddress: string; 
-      deliveryPhone: string; 
-      deliveryEmail: string; 
-      paymentMethod: string;
-      selectedItems?: string[]; // ✅ МАССИВ ID ВЫБРАННЫХ ТОВАРОВ
-    }) => 
-      fetch(`${API_URL}/orders/create`, { 
-        method: "POST", 
-        body: JSON.stringify(data), // ✅ selectedItems автоматом попадет в body
-        ...fetchOptions 
+    // Используем отдельный DTO-тип для входных данных
+    create: (data: import("../types/CreateOrderDTO").CreateOrderDTO) =>
+      fetch(`${API_URL}/orders/create`, {
+        method: "POST",
+        body: JSON.stringify(data), // selectedItems попадёт в тело автоматически
+        ...fetchOptions,
       }),
     get: () => fetch(`${API_URL}/orders`, { ...fetchOptions }),
   },
