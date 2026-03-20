@@ -20,10 +20,9 @@ body {
 /* HEADER */
 .header {
   background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
-  --header-accent: #8c087fe4; /* accent color used for icons/links */
   color: white;
   padding: 12px 0;
-  box-shadow: 0 4px 12px rgba(64, 0, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(167,139,250,0.3);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -55,14 +54,29 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  color: var(--header-accent); /* make cart icon use accent color via currentColor */
 }
 
 .cart-svg {
   width: 24px;
   height: 24px;
-  /* inherit header text color so SVG matches link/button color */
-  stroke: currentColor;
+  stroke: white;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: #f87171;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* MAIN CONTENT */
@@ -106,23 +120,6 @@ body {
   border-color: #a78bfa;
 }
 
-.cart-badge {
-  position: absolute;
-  top: -5px;
-  right: -10px;
-  background: #f87171;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 5px;
-  border-radius: 10px;
-  min-width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .auth-form button {
   width: 100%;
   padding: 14px;
@@ -134,52 +131,6 @@ body {
   font-weight: 600;
   cursor: pointer;
   margin-top: 16px;
-}
-
-/*  button as plain text */
-.text-link {
-  background: transparent;
-  border: none;
-  padding: 0;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-/* Greeting spacing and alignment in auth section */
-.auth-section {
-  display: flex;
-  align-items: center;
-  gap: 12px; /* небольшое расстояние между приветствием и кнопкой */
-}
-
-.auth-section .greeting {
-  color: white;
-  font-weight: 600;
-}
-
-/* Restore simpler header link appearance (like before): white text, no border */
-.header a#home-link,
-.header a#logout-link,
-.header a.btn.btn-outline.btn-small {
-  background: transparent;
-  border: none;
-  /* use header accent color so links match cart color */
-  color: var(--header-accent) !important;
-  padding: 0 6px; /* small spacing to separate links */
-  border-radius: 0;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.header a#home-link:hover,
-.header a#logout-link:hover,
-.header a.btn.btn-outline.btn-small:hover {
-  text-decoration: underline;
-  background: transparent;
 }
 
 /* HOME */

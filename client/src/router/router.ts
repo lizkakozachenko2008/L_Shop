@@ -53,25 +53,7 @@ const renderPage = async () => {
 
   let header: HTMLElement;
   try {
-    // Header может быть экспортирован по-разному: класс, фабрика (функция) или уже готовый объект.
-    // Попробуем корректно создать/получить экземпляр в любом из случаев.
-    let headerInstance: any;
-
-    if (typeof Header === 'function') {
-      // Пытаемся создать как класс; если это не конструктор, попытаемся вызвать как функцию-фабрику
-      try {
-        headerInstance = new (Header as any)();
-      } catch (e) {
-        headerInstance = (Header as any)();
-      }
-    } else if (typeof Header === 'object' && Header !== null && typeof (Header as any).render === 'function') {
-      // Уже инстанс с методом render
-      headerInstance = Header;
-    } else {
-      throw new Error('Header is not constructible or callable');
-    }
-
-    header = await headerInstance.render();
+    header = await Header();
   } catch (err) {
     console.error("Ошибка Header — fallback:", err);
     header = document.createElement("header");

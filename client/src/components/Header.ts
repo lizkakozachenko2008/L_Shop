@@ -80,15 +80,13 @@ export class Header {
     nav.className = 'header-nav';
 
     // Главная
-    const homeLink = document.createElement('a');
-    homeLink.className = 'btn btn-outline btn-small';
-    homeLink.href = '/';
-    homeLink.id = 'home-link';
-    homeLink.textContent = 'Главная';
-    homeLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      location.href = '/';
+    const homeLink = Button({
+      text: 'Главная',
+      variant: 'outline',
+      size: 'small',
+      href: '/'
     });
+    homeLink.id = 'home-link';
 
     // Авторизация
     const authSection = this.renderAuthSection();
@@ -105,27 +103,25 @@ export class Header {
     container.className = 'auth-section';
 
     if (this.userInfo.isLoggedIn) {
-  const userSpan = document.createElement('span');
-  userSpan.textContent = `Привет, ${this.userInfo.name}!`;
-  userSpan.className = 'greeting';
+      const userSpan = document.createElement('span');
+      userSpan.textContent = `Привет, ${this.userInfo.name}!`;
       
-          // создаём logout как <a> с теми же классами, что и homeLink
-          const logoutLink = document.createElement('a');
-          logoutLink.className = 'btn btn-outline btn-small';
-          logoutLink.href = '#';
-          logoutLink.id = 'logout-link';
-          logoutLink.textContent = 'Выйти';
-          logoutLink.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-              await api.auth.logout();
-              location.reload();
-            } catch (err) {
-              console.error('Ошибка при выходе:', err);
-            }
-          });
+      const logoutBtn = Button({
+        text: 'Выйти',
+        variant: 'outline',
+        size: 'small',
+        onClick: async () => {
+          try {
+            await api.auth.logout();
+            location.reload();
+          } catch (err) {
+            console.error('Ошибка при выходе:', err);
+          }
+        }
+      });
+      logoutBtn.id = 'logout-link';
 
-        container.append(userSpan, logoutLink);
+      container.append(userSpan, logoutBtn);
     } else {
       const loginLink = Button({
         text: 'Вход / Регистрация',
@@ -141,34 +137,25 @@ export class Header {
     return container;
   }
 
-private renderCartLink(): HTMLElement {
-  const cartLink = document.createElement('a');
-  cartLink.href = '/cart';
-  cartLink.className = 'cart-link';
-  cartLink.id = 'cart-link';
-  
-  // Создаем иконку
-  const icon = Icon({ name: 'cart', size: 24 });
-  
-  // Создаем контейнер для бейджа (чтобы он не прыгал)
-  const badgeContainer = document.createElement('span');
-  badgeContainer.className = 'badge-container';
-  
-  if (this.cartCount > 0) {
+  private renderCartLink(): HTMLElement {
+    const cartLink = document.createElement('a');
+    cartLink.href = '/cart';
+    cartLink.className = 'cart-link';
+    cartLink.id = 'cart-link';
+    
+    const icon = Icon({ name: 'cart', size: 24 });
     const badge = Badge({ count: this.cartCount });
-    badgeContainer.appendChild(badge);
+    
+    cartLink.appendChild(icon);
+    cartLink.appendChild(badge);
+    
+    cartLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.href = '/cart';
+    });
+
+    return cartLink;
   }
-
-  cartLink.append(icon, badgeContainer); // Используем append, а не innerHTML
-  
-  cartLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    // Используйте ваш роутер здесь, если он есть, вместо location.href
-    location.href = '/cart';
-  });
-
-  return cartLink;
-}
 
   private renderLeftSection(): HTMLElement {
     const left = document.createElement('div');
