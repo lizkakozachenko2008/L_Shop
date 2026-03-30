@@ -9,7 +9,6 @@ export const CartPage = (): HTMLElement => {
   let selectedItems: string[] = JSON.parse(localStorage.getItem("cartSelectedItems") || "[]");
   let cartData: { items: { product: Product; quantity: number }[] } = { items: [] };
 
-  // --- ЭЛЕМЕНТЫ ИНТЕРФЕЙСА ---
   const header = document.createElement("div");
   header.className = "cart-header";
   
@@ -77,7 +76,6 @@ export const CartPage = (): HTMLElement => {
   layout.append(itemsSection, summarySection);
   container.append(header, layout);
 
-  // --- ЛОГИКА ОБНОВЛЕНИЯ ---
   const updateTotal = () => {
     const selected = cartData.items.filter(item => selectedItems.includes(item.product.id.toString()));
     const total = selected.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
@@ -91,12 +89,11 @@ export const CartPage = (): HTMLElement => {
 
     localStorage.setItem("cartSelectedItems", JSON.stringify(selectedItems));
     
-    // Синхронизация чекбокса "Выбрать все"
     selectAllCheckbox.checked = cartData.items.length > 0 && selectedItems.length === cartData.items.length;
   };
 
   const renderItems = () => {
-    itemsContainer.innerHTML = ""; // Очистка перед рендером
+    itemsContainer.innerHTML = "";
 
     if (cartData.items.length === 0) {
       const emptyMsg = document.createElement("div");
@@ -116,7 +113,6 @@ export const CartPage = (): HTMLElement => {
       const card = document.createElement("div");
       card.className = "cart-item";
 
-      // Чекбокс
       const cbLabel = document.createElement("label");
       cbLabel.className = "item-checkbox";
       const cb = document.createElement("input");
@@ -130,7 +126,6 @@ export const CartPage = (): HTMLElement => {
       };
       cbLabel.append(cb);
 
-      // Информация
       const info = document.createElement("div");
       info.className = "item-info";
       const t = document.createElement("h3");
@@ -142,7 +137,6 @@ export const CartPage = (): HTMLElement => {
       s.textContent = `В наличии: ${item.product.stock}`;
       info.append(t, p, s);
 
-      // Управление количеством
       const controls = document.createElement("div");
       controls.className = "quantity-controls";
       
@@ -152,7 +146,7 @@ export const CartPage = (): HTMLElement => {
       btnMinus.onclick = async () => {
         if (item.quantity > 1) {
           await api.cart.update(item.product.id, item.quantity - 1);
-          loadCart(); // Перезагружаем для актуальности данных
+          loadCart(); 
         }
       };
 
@@ -171,12 +165,10 @@ export const CartPage = (): HTMLElement => {
       };
       controls.append(btnMinus, qtyShow, btnPlus);
 
-      // Итоговая цена позиции
       const itemTotal = document.createElement("div");
       itemTotal.className = "item-total-price";
       itemTotal.textContent = `${(item.product.price * item.quantity).toFixed(2)} Br`;
 
-      // Удаление
       const removeBtn = document.createElement("button");
       removeBtn.className = "remove-btn";
       removeBtn.textContent = "×";
@@ -198,13 +190,12 @@ export const CartPage = (): HTMLElement => {
       cartData.items = data.items;
       renderItems();
       updateTotal();
-      updateCartBadge(); // Обновляем иконку в хедере
+      updateCartBadge(); 
     } catch (err) {
       itemsContainer.textContent = "Ошибка загрузки корзины или требуется авторизация.";
     }
   };
 
-  // --- СОБЫТИЯ ВЕРХНЕГО УРОВНЯ ---
   selectAllCheckbox.onchange = () => {
     if (selectAllCheckbox.checked) {
       selectedItems = cartData.items.map(i => i.product.id.toString());

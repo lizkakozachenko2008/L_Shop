@@ -69,7 +69,7 @@ export const login = async (req: Request, res: Response) => {
 
 const createSession = async (user: User, res: Response) => {
   const sessionId = uuidv4();
-  const sessionExpires = Date.now() + 10 * 60 * 1000; // 10 минут
+  const sessionExpires = Date.now() + 10 * 60 * 1000; 
 
   const users = await getUsers();
   const updated = users.find(u => u.id === user.id);
@@ -81,7 +81,7 @@ const createSession = async (user: User, res: Response) => {
 
   res.cookie("sessionId", sessionId, {
     httpOnly: true,
-    secure: false, // в продакшене true с HTTPS
+    secure: false,
     sameSite: "strict",
     maxAge: 10 * 60 * 1000,
   });

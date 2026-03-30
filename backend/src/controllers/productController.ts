@@ -9,7 +9,6 @@ export const getProducts = async (req: Request, res: Response) => {
 
   let filtered = [...products];
 
-  // Поиск по title/description
   const search = req.query.search as string;
   if (search) {
     const lowerSearch = search.toLowerCase();
@@ -19,13 +18,11 @@ export const getProducts = async (req: Request, res: Response) => {
     );
   }
 
-  // Фильтр по категории
   const category = req.query.category as string;
   if (category) {
     filtered = filtered.filter(p => p.category === category);
   }
 
-  // Фильтр по наличию
   const inStock = req.query.inStock as string;
   if (inStock === "true") {
     filtered = filtered.filter(p => p.stock > 0);
@@ -33,7 +30,6 @@ export const getProducts = async (req: Request, res: Response) => {
     filtered = filtered.filter(p => p.stock === 0);
   }
 
-  // Сортировка по цене
   const sort = req.query.sort as string;
   if (sort === "price_asc") {
     filtered.sort((a, b) => a.price - b.price);
@@ -41,7 +37,7 @@ export const getProducts = async (req: Request, res: Response) => {
     filtered.sort((a, b) => b.price - a.price);
   }
 
-  // Пагинация (опционально, но полезно)
+ 
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
   const start = (page - 1) * limit;

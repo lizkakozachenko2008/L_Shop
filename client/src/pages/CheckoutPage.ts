@@ -8,13 +8,11 @@ export const CheckoutPage = (): HTMLElement => {
 
   const selectedItems: string[] = JSON.parse(localStorage.getItem("checkoutItems") || "[]");
 
-  // Если корзина пуста, редирект
   if (selectedItems.length === 0) {
     setTimeout(() => navigate("/cart"), 0);
     return container;
   }
 
-  // --- Хелперы для создания элементов ---
   const createInputGroup = (labelText: string, inputElement: HTMLElement, isFullWidth: boolean = false) => {
     const group = document.createElement("div");
     group.className = "form-group";
@@ -39,7 +37,6 @@ export const CheckoutPage = (): HTMLElement => {
     return { row, valueSpan, labelSpan };
   };
 
-  // --- Основная структура ---
   const checkoutContainer = document.createElement("div");
   checkoutContainer.className = "checkout-container";
 
@@ -48,9 +45,8 @@ export const CheckoutPage = (): HTMLElement => {
 
   const form = document.createElement("form");
   form.id = "checkout-form";
-  form.className = "checkout-form"; // Grid: 1fr 380px по вашему CSS
+  form.className = "checkout-form"; 
 
-  // --- ЛЕВАЯ КОЛОНКА: ДАННЫЕ (form-section) ---
   const formSection = document.createElement("div");
   formSection.className = "form-section";
 
@@ -69,7 +65,6 @@ export const CheckoutPage = (): HTMLElement => {
   addressInput.rows = 3;
   addressInput.placeholder = "ул. Примерная, д. 123, кв. 45";
 
-  // Оплата и доставка в один ряд
   const paymentSelect = document.createElement("select");
   paymentSelect.id = "payment-method";
   paymentSelect.add(new Option("💳 Картой онлайн", "card"));
@@ -91,7 +86,6 @@ export const CheckoutPage = (): HTMLElement => {
   commentInput.rows = 3;
   commentInput.placeholder = "Дополнительные пожелания...";
 
-  // Собираем левую часть
   formSection.append(
     createInputGroup("Телефон *", phoneInput),
     createInputGroup("Email *", emailInput),
@@ -100,7 +94,6 @@ export const CheckoutPage = (): HTMLElement => {
     createInputGroup("Комментарий к заказу", commentInput, true)
   );
 
-  // --- ПРАВАЯ КОЛОНКА: ИТОГ (order-summary) ---
   const summaryDiv = document.createElement("div");
   summaryDiv.className = "order-summary";
 
@@ -130,12 +123,10 @@ export const CheckoutPage = (): HTMLElement => {
     submitBtn
   );
 
-  // Сборка формы
   form.append(formSection, summaryDiv);
   checkoutContainer.append(title, form);
   container.append(checkoutContainer);
 
-  // --- Логика данных ---
   let baseTotal = 0;
 
   const updateDeliveryDisplay = () => {
@@ -189,7 +180,6 @@ export const CheckoutPage = (): HTMLElement => {
 
   deliverySelect.addEventListener("change", updateDeliveryDisplay);
 
-  // --- Отправка заказа ---
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     submitBtn.disabled = true;
@@ -210,7 +200,6 @@ export const CheckoutPage = (): HTMLElement => {
       localStorage.removeItem("checkoutItems");
       await updateCartBadge();
 
-      // Модалка
       const modal = document.createElement("div");
       modal.className = "success-modal";
       const content = document.createElement("div");

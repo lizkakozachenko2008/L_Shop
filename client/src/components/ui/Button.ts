@@ -6,8 +6,8 @@ export interface ButtonProps {
   size?: 'small' | 'medium' | 'large' | 'icon';
   className?: string;
   href?: string;
-  id?: string;        // Добавили для поиска в DOM
-  ariaLabel?: string; // Добавили для доступности (ошибка 2339)
+  id?: string;      
+  ariaLabel?: string; 
   type?: 'button' | 'submit' | 'reset';
 }
 
@@ -32,7 +32,7 @@ export const Button = ({
 
   el.className = `btn btn-${variant} btn-${size} ${className}`.trim();
 
-  // Рендерим текст или дочерние элементы
+  
   if (children) {
     if (children instanceof Node) el.appendChild(children);
     else el.append(children);

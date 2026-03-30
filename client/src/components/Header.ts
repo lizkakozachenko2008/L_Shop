@@ -97,7 +97,7 @@ export class Header {
 
     const icon = Icon({ name: 'cart', size: 24, className: 'cart-svg' });
     const b = Badge({ count: this.cartCount });
-    b.className = 'cart-badge'; // класс под твой CSS
+    b.className = 'cart-badge'; 
 
     a.append(icon, b);
     a.onclick = (e) => { e.preventDefault(); location.href = '/cart'; };
@@ -114,7 +114,7 @@ export class Header {
     const nav = document.createElement('nav');
     nav.className = 'header-nav';
 
-    // Кнопка Главная ровно как ты просил
+   
     const homeA = document.createElement('a');
     homeA.className = 'btn btn-outline btn-small';
     homeA.href = '/';
@@ -141,7 +141,7 @@ export class Header {
     }
   }
 
-  // Static helper to create a safe fallback header (used by router when Header.render fails)
+ 
   public static createFallback(): HTMLElement {
     const header = document.createElement('header');
     header.className = 'header';

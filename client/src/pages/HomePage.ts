@@ -9,7 +9,6 @@ export const HomePage = (): HTMLElement => {
   let currentPage = 1;
   const ITEMS_PER_PAGE = 9;
 
-  // --- 1. Создание фильтров ---
   const filtersDiv = document.createElement("div");
   filtersDiv.className = "filters";
 
@@ -36,7 +35,6 @@ export const HomePage = (): HTMLElement => {
 
   filtersDiv.append(searchInput, categoryFilter, stockFilter, sortFilter);
 
-  // --- 2. Сетка товаров и Пагинация ---
   const productsGrid = document.createElement("div");
   productsGrid.className = "products-grid";
   productsGrid.id = "products-grid";
@@ -47,11 +45,10 @@ export const HomePage = (): HTMLElement => {
 
   container.append(filtersDiv, productsGrid, paginationDiv);
 
-  // --- 3. Функция загрузки ---
+
   const loadProducts = async (page: number = 1) => {
     currentPage = page;
 
-    // Показываем лоадер (через создание элементов)
     productsGrid.replaceChildren();
     const loader = document.createElement("div");
     loader.style.cssText = "text-align: center; padding: 80px; color: #666;";

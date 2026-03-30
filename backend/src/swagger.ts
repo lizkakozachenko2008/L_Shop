@@ -35,7 +35,7 @@ const options = {
       },
     },
   },
-  // Используем абсолютные пути от корня проекта
+
   apis: [
     path.join(process.cwd(), 'src/routes/*.ts'),
     path.join(process.cwd(), 'src/controllers/*.ts'),

@@ -133,7 +133,7 @@ export const updateCartItem = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Товар не в корзине" });
     }
 
-    // Проверка остатка при обновлении
+
     if (quantity > 0) {
       const products = await getProducts();
       const product = products.find(p => p.id === productId);

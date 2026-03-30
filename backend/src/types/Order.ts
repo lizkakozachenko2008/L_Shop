@@ -4,13 +4,13 @@ export interface Order {
   items: {
     productId: string;
     quantity: number;
-    priceAtPurchase: number; // цена на момент заказа
+    priceAtPurchase: number; 
   }[];
   totalAmount: number;
   deliveryAddress: string;
   deliveryPhone: string;
   deliveryEmail: string;
-  paymentMethod: string; // "card","cash",etc.
-  createdAt: number; // timestamp
-  status?: string; // "new","processing","delivered" 
+  paymentMethod: string;
+  createdAt: number;
+  status?: string;
 }

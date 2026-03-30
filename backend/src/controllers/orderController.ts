@@ -25,20 +25,20 @@ export const createOrder = async (req: Request, res: Response) => {
       deliveryPhone,
       deliveryEmail,
       paymentMethod,
-      selectedItems // ✅ ПОЛУЧАЕМ ВЫБРАННЫЕ ТОВАРЫ ИЗ ТЕЛА ЗАПРОСА
+      selectedItems 
     }: {
       deliveryAddress: string;
       deliveryPhone: string;
       deliveryEmail: string;
       paymentMethod: string;
-      selectedItems?: string[]; // ✅ МАССИВ ID ВЫБРАННЫХ ТОВАРОВ
+      selectedItems?: string[]; 
     } = req.body;
 
     if (!deliveryAddress || !deliveryPhone || !deliveryEmail || !paymentMethod) {
       return res.status(400).json({ message: "Заполните все поля доставки и оплаты" });
     }
 
-    // Получаем корзину пользователя
+
     const carts = await getCarts();
     const cart = carts.find((c: Cart) => c.userId === user.id);
     
@@ -46,7 +46,7 @@ export const createOrder = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Корзина пуста" });
     }
 
-    // ✅ Если selectedItems не передан, берем все товары из корзины
+   
     const itemsToOrder = selectedItems && selectedItems.length > 0
       ? cart.items.filter(item => selectedItems.includes(item.productId))
       : cart.items;
@@ -59,7 +59,7 @@ export const createOrder = async (req: Request, res: Response) => {
     const orderItems = [];
     let totalAmount = 0;
 
-    // ✅ 1. Проверяем наличие и резервируем ТОЛЬКО ВЫБРАННЫЕ товары
+    
     for (const item of itemsToOrder) {
       const product = products.find(p => p.id === item.productId);
       
@@ -75,7 +75,7 @@ export const createOrder = async (req: Request, res: Response) => {
         });
       }
 
-      // ✅ 2. УМЕНЬШАЕМ КОЛИЧЕСТВО НА СКЛАДЕ
+      
       product.stock -= item.quantity;
       
       orderItems.push({
@@ -87,10 +87,10 @@ export const createOrder = async (req: Request, res: Response) => {
       totalAmount += product.price * item.quantity;
     }
 
-    // ✅ 3. СОХРАНЯЕМ ОБНОВЛЕННЫЕ ТОВАРЫ
+   
     await saveProducts(products);
 
-    // ✅ 4. Создаем заказ
+ 
     const newOrder: Order = {
       id: uuidv4(),
       userId: user.id,
@@ -108,7 +108,7 @@ export const createOrder = async (req: Request, res: Response) => {
     orders.push(newOrder);
     await saveOrders(orders);
 
-    // ✅ 5. УДАЛЯЕМ ТОЛЬКО ВЫБРАННЫЕ ТОВАРЫ ИЗ КОРЗИНЫ
+   
     const remainingItems = cart.items.filter(
       item => !itemsToOrder.some(ordered => ordered.productId === item.productId)
     );
@@ -116,7 +116,7 @@ export const createOrder = async (req: Request, res: Response) => {
     cart.items = remainingItems;
     await saveCarts(carts);
 
-    // ✅ 6. Отправляем успешный ответ
+   
     res.status(201).json({ 
       message: "✅ Заказ оформлен успешно! Выбранные товары списаны со склада и удалены из корзины.",
       order: {
@@ -125,7 +125,7 @@ export const createOrder = async (req: Request, res: Response) => {
         itemsCount: newOrder.items.length,
         createdAt: newOrder.createdAt
       },
-      remainingCartItems: remainingItems.length // Сколько товаров осталось в корзине
+      remainingCartItems: remainingItems.length 
     });
 
   } catch (error: any) {

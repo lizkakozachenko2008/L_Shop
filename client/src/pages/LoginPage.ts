@@ -56,11 +56,9 @@ export const LoginPage = (): HTMLElement => {
   const prefixText = document.createTextNode("Нет аккаунта? ");
   toggleText.append(prefixText, toggleLink);
 
-  // Сборка DOM
   form.append(title, nameInput, emailInput, phoneInput, passwordInput, submitBtn, toggleText);
   container.append(logo, form);
 
-  // --- Логика переключения Регистрация / Вход ---
   let isRegister = false;
 
   const updateToggleMode = () => {
@@ -69,12 +67,10 @@ export const LoginPage = (): HTMLElement => {
     title.textContent = isRegister ? "Регистрация" : "Вход";
     submitBtn.textContent = isRegister ? "Зарегистрироваться" : "Войти";
     
-    // Показываем/скрываем поля
     const displayMode = isRegister ? "block" : "none";
     nameInput.style.display = displayMode;
     phoneInput.style.display = displayMode;
     
-    // Обновляем текст ссылки
     prefixText.textContent = isRegister ? "Уже есть аккаунт? " : "Нет аккаунта? ";
     toggleLink.textContent = isRegister ? "Вход" : "Регистрация";
   };

@@ -1,4 +1,3 @@
-// cartRoutes.ts
 import { Router } from "express";
 import { getCart, addToCart, updateCartItem, removeFromCart } from "../controllers/cartController";
 import { authMiddleware } from "../middleware/authMiddleware";

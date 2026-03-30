@@ -36,7 +36,7 @@ export const updateCartBadge = async () => {
     
   } catch {
     badge.textContent = "0";
-    badge.style.display = "none"; // Ошибка = гости = нет badge
+    badge.style.display = "none";
   }
 };
 
@@ -53,12 +53,10 @@ const renderPage = async () => {
 
   let header: HTMLElement;
   try {
-    // Header is a class — construct it and call render()
     const headerInstance = new Header();
     header = await headerInstance.render();
   } catch (err) {
     console.error("Ошибка Header — fallback:", err);
-    // Use Header.createFallback() to provide a safe fallback header
     header = Header.createFallback();
   }
 
@@ -71,7 +69,7 @@ const renderPage = async () => {
   app.appendChild(main);
   main.appendChild(pageElement);
 
-  await updateCartBadge(); // После DOM
+  await updateCartBadge();
 };
 
 export const navigate = async (path: string) => {

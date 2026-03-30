@@ -3,11 +3,11 @@ export interface Product {
   title: string;
   description: string;
   price: number;
-  discountPercentage?: number; // опционально
+  discountPercentage?: number; 
   rating?: number;
-  stock: number; // наличие
+  stock: number; 
   brand: string;
-  category: string; // например "Уход за лицом", "Макияж" и т.д.
-  thumbnail?: string; // URL картинки 
-  images?: string[]; // массив картинок
+  category: string; 
+  thumbnail?: string; 
+  images?: string[]; 
 }

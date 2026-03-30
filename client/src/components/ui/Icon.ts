@@ -4,7 +4,6 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
   const svgNS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgNS, 'svg');
   
-  // Базовые атрибуты SVG
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('width', size.toString());
   svg.setAttribute('height', size.toString());
@@ -14,7 +13,6 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
 
-  // БЕЗОПАСНАЯ ОБРАБОТКА КЛАССОВ (Фикс SyntaxError)
   const classList = ['icon-svg'];
   if (typeof className === 'string' && className.trim()) {
     classList.push(...className.trim().split(/\s+/));
@@ -22,9 +20,7 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
     classList.push(...className.filter(Boolean));
   }
   
-  // Используем setAttribute, он никогда не падает от пустых строк
   svg.setAttribute('class', classList.join(' '));
-  // Sprite loading/cache (loaded once)
   let spriteDoc: Document | null = (window as any).__ICON_SPRITE_DOC__ || null;
   let spritePromise: Promise<void> | null = (window as any).__ICON_SPRITE_PROMISE__ || null;
 
@@ -38,7 +34,6 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
         spriteDoc = doc;
         (window as any).__ICON_SPRITE_DOC__ = doc;
       }).catch(() => {
-        // ignore failures — we'll fallback to inline builds
       }).finally(() => { (window as any).__ICON_SPRITE_PROMISE__ = null; });
     (window as any).__ICON_SPRITE_PROMISE__ = spritePromise;
     return spritePromise;
@@ -81,7 +76,6 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
   const populateFromSprite = () => {
     try {
       if (!spriteDoc) return false;
-      // Try several selectors to find a matching element
       const trySelectors = [
         `#${name}`,
         `symbol#${name}`,
@@ -97,7 +91,6 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
       if (!found) return false;
 
       clearChildren();
-      // If it's a <symbol> or <svg>, clone its children into our svg
       if (found.tagName.toLowerCase() === 'symbol' || found.tagName.toLowerCase() === 'svg') {
         const children = Array.from(found.childNodes) as Node[];
         for (const ch of children) {
@@ -107,7 +100,7 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
         return true;
       }
 
-      // Otherwise, clone the element itself
+
       const imported = document.importNode(found, true) as Node;
       svg.appendChild(imported);
       return true;
@@ -116,20 +109,19 @@ export const Icon = ({ name, size = 24, className = '' }: IconProps): SVGElement
     }
   };
 
-  // First try: if sprite already loaded, populate synchronously
+
   spriteDoc = (window as any).__ICON_SPRITE_DOC__ || spriteDoc;
   if (spriteDoc && populateFromSprite()) {
     return svg;
   }
 
-  // Otherwise, start loading sprite in background and populate when ready; fallback to inline build if sprite missing
+
   ensureSprite().then(() => {
     spriteDoc = (window as any).__ICON_SPRITE_DOC__ || spriteDoc;
     if (!populateFromSprite()) {
       buildInline();
     }
   }).catch(() => {
-    // load failed — fallback inline
     buildInline();
   });
 
