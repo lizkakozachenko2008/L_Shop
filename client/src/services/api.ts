@@ -32,18 +32,11 @@ export const api = {
       fetch(`${API_URL}/cart/remove/${productId}`, { method: "DELETE", ...fetchOptions }),
   },
   orders: {
-    // ✅ ДОБАВЛЯЕМ selectedItems В ТИП И ЗАПРОС
-    create: (data: { 
-      deliveryAddress: string; 
-      deliveryPhone: string; 
-      deliveryEmail: string; 
-      paymentMethod: string;
-      selectedItems?: string[]; // ✅ МАССИВ ID ВЫБРАННЫХ ТОВАРОВ
-    }) => 
-      fetch(`${API_URL}/orders/create`, { 
-        method: "POST", 
-        body: JSON.stringify(data), // ✅ selectedItems автоматом попадет в body
-        ...fetchOptions 
+    create: (data: import("../types/CreateOrderDTO").CreateOrderDTO) =>
+      fetch(`${API_URL}/orders/create`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        ...fetchOptions,
       }),
     get: () => fetch(`${API_URL}/orders`, { ...fetchOptions }),
   },
@@ -51,7 +44,6 @@ export const api = {
 
 export const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
-    // ✅ УЛУЧШАЕМ ОБРАБОТКУ ОШИБОК - парсим сообщение с сервера
     try {
       const errorData = await response.json();
       throw new Error(errorData.message || "Ошибка API");

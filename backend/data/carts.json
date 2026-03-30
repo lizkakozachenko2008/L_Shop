@@ -11,5 +11,14 @@
   {
     "userId": "fcfed5ab-a8dc-4bfd-a605-2bb66aeb1e00",
     "items": []
+  },
+  {
+    "userId": "85b12c2e-aefa-444a-8603-40e4a13c7800",
+    "items": [
+      {
+        "productId": "3",
+        "quantity": 1
+      }
+    ]
   }
 ]

@@ -1,38 +1,48 @@
 export interface ButtonProps {
-  text: string;
+  text?: string;
+  children?: any;
   onClick?: (e: Event) => void;
   variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | 'icon';
   className?: string;
-  href?: string; // если это ссылка
+  href?: string;
+  id?: string;        // Добавили для поиска в DOM
+  ariaLabel?: string; // Добавили для доступности (ошибка 2339)
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export const Button = ({
   text,
+  children,
   onClick,
   variant = 'primary',
   size = 'medium',
   className = '',
-  href
+  href,
+  id,
+  ariaLabel,
+  type = 'button'
 }: ButtonProps): HTMLElement => {
-  const button = href ? document.createElement('a') : document.createElement('button');
+  const el = href ? document.createElement('a') : document.createElement('button');
   
-  button.textContent = text;
-  
-  // Базовые классы
-  const baseClass = 'btn';
-  const variantClass = `btn-${variant}`;
-  const sizeClass = `btn-${size}`;
-  
-  button.className = `${baseClass} ${variantClass} ${sizeClass} ${className}`.trim();
-  
-  if (href) {
-    (button as HTMLAnchorElement).href = href;
+  if (id) el.id = id;
+  if (ariaLabel) el.setAttribute('aria-label', ariaLabel);
+  if (href) (el as HTMLAnchorElement).href = href;
+  if (!href) (el as HTMLButtonElement).type = type;
+
+  el.className = `btn btn-${variant} btn-${size} ${className}`.trim();
+
+  // Рендерим текст или дочерние элементы
+  if (children) {
+    if (children instanceof Node) el.appendChild(children);
+    else el.append(children);
+  } else if (text) {
+    el.textContent = text;
   }
-  
+
   if (onClick) {
-    button.addEventListener('click', onClick);
+    el.addEventListener('click', onClick);
   }
-  
-  return button;
+
+  return el;
 };

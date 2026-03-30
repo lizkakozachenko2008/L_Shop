@@ -6,176 +6,195 @@ export const HomePage = (): HTMLElement => {
   const container = document.createElement("div");
   container.className = "home-page";
 
-  container.innerHTML = `
-  <div class="filters">
-  <input type="text" id="search-input" placeholder="Поиск по названию">
-  <select id="category-filter">
-  <option value="">Все категории</option>
-   </select>
-   <select id="stock-filter">
-    <option value="">Все</option>
-    <option value="true">В наличии</option>
-    <option value="false">Нет в наличии</option>
-   </select>
-   <select id="sort-filter">
-    <option value="">Сортировка</option>
-    <option value="price_asc">Цена ↑</option>
-    <option value="price_desc">Цена ↓</option>
-   </select>
- </div>
- <div class="products-grid" id="products-grid">
-   <div style="text-align: center; padding: 80px; color: #666;">
-    <div style="font-size: 4rem;">🛍️</div>
-    <p>Загрузка товаров...</p>
-   </div>
- </div>
- <div class="pagination" id="pagination"></div>
-`;
-
   let currentPage = 1;
-  const ITEMS_PER_PAGE = 9; // 3x3 = 9 карточек
+  const ITEMS_PER_PAGE = 9;
 
+  // --- 1. Создание фильтров ---
+  const filtersDiv = document.createElement("div");
+  filtersDiv.className = "filters";
+
+  const searchInput = document.createElement("input");
+  searchInput.type = "text";
+  searchInput.id = "search-input";
+  searchInput.placeholder = "Поиск по названию";
+
+  const categoryFilter = document.createElement("select");
+  categoryFilter.id = "category-filter";
+  categoryFilter.add(new Option("Все категории", ""));
+
+  const stockFilter = document.createElement("select");
+  stockFilter.id = "stock-filter";
+  stockFilter.add(new Option("Все", ""));
+  stockFilter.add(new Option("В наличии", "true"));
+  stockFilter.add(new Option("Нет в наличии", "false"));
+
+  const sortFilter = document.createElement("select");
+  sortFilter.id = "sort-filter";
+  sortFilter.add(new Option("Сортировка", ""));
+  sortFilter.add(new Option("Цена ↑", "price_asc"));
+  sortFilter.add(new Option("Цена ↓", "price_desc"));
+
+  filtersDiv.append(searchInput, categoryFilter, stockFilter, sortFilter);
+
+  // --- 2. Сетка товаров и Пагинация ---
+  const productsGrid = document.createElement("div");
+  productsGrid.className = "products-grid";
+  productsGrid.id = "products-grid";
+
+  const paginationDiv = document.createElement("div");
+  paginationDiv.className = "pagination";
+  paginationDiv.id = "pagination";
+
+  container.append(filtersDiv, productsGrid, paginationDiv);
+
+  // --- 3. Функция загрузки ---
   const loadProducts = async (page: number = 1) => {
-   currentPage = page;
-   
-   const search = (container.querySelector("#search-input") as HTMLInputElement)?.value || "";
-   const category = (container.querySelector("#category-filter") as HTMLSelectElement)?.value || "";
-   const inStock = (container.querySelector("#stock-filter") as HTMLSelectElement)?.value || "";
-   const sort = (container.querySelector("#sort-filter") as HTMLSelectElement)?.value || "";
+    currentPage = page;
 
-   const params = new URLSearchParams({
-   page: page.toString(),
-   limit: ITEMS_PER_PAGE.toString()
-   });
-   
-   if (search) params.append("search", search);
-   if (category) params.append("category", category);
-   if (inStock !== "") params.append("inStock", inStock);
-   if (sort) params.append("sort", sort);
+    // Показываем лоадер (через создание элементов)
+    productsGrid.replaceChildren();
+    const loader = document.createElement("div");
+    loader.style.cssText = "text-align: center; padding: 80px; color: #666;";
+    const loaderIcon = document.createElement("div");
+    loaderIcon.style.fontSize = "4rem";
+    loaderIcon.textContent = "🛍️";
+    const loaderText = document.createElement("p");
+    loaderText.textContent = "Загрузка товаров...";
+    loader.append(loaderIcon, loaderText);
+    productsGrid.append(loader);
 
-   try {
-   const res = await api.products.get(params);
-   const data = await handleResponse<{ products: Product[]; total: number; page: number; limit: number }>(res);
+    const params = new URLSearchParams({
+      page: currentPage.toString(),
+      limit: ITEMS_PER_PAGE.toString()
+    });
 
-   const grid = container.querySelector("#products-grid") as HTMLElement;
-   if (grid) grid.innerHTML = "";
+    if (searchInput.value) params.append("search", searchInput.value);
+    if (categoryFilter.value) params.append("category", categoryFilter.value);
+    if (stockFilter.value !== "") params.append("inStock", stockFilter.value);
+    if (sortFilter.value) params.append("sort", sortFilter.value);
 
-   // Заполняем категории (один раз)
-   const categorySelect = container.querySelector("#category-filter") as HTMLSelectElement;
-   if (categorySelect && categorySelect.options.length === 1) {
-     const categories = [...new Set(data.products.map(p => p.category))];
-     categories.forEach(cat => {
-      const option = document.createElement("option");
-      option.value = cat;
-      option.textContent = cat;
-      categorySelect.appendChild(option);
-     });
-   }
+    try {
+      const res = await api.products.get(params);
+      const data = await handleResponse<{ products: Product[]; total: number; page: number; limit: number }>(res);
 
-   // Рендерим товары текущей страницы
-   data.products.forEach(product => {
-     const card = document.createElement("div");
-     card.className = "product-card";
-     card.innerHTML = `
-      <h3 data-title>${product.title}</h3>
-      <p data-price>${product.price.toFixed(2)} Br</p>
-      <p>${product.description}</p>
-      <p>Категория: ${product.category}</p>
-      <p class="stock-info">В наличии: <strong>${product.stock}</strong> шт</p>
-      <div class="add-to-cart">
-       <input type="number" min="1" max="${product.stock}" value="1" class="quantity-input">
-       <button class="add-btn">Добавить в корзину</button>
-      </div>
-     `;
-
-     card.querySelector(".add-btn")?.addEventListener("click", async () => {
-      const input = card.querySelector(".quantity-input") as HTMLInputElement;
-      const quantity = parseInt(input.value) || 1;
-      if (quantity > 0 && quantity <= product.stock) {
-       try {
-        await api.cart.add({ productId: product.id, quantity });
-        await updateCartBadge(); 
-        alert("✅ Добавлено в корзину! (счётчик обновлён)");
-        // ❌ УБРАНО: navigate("/cart");
-       } catch (err) {
-        alert("Войдите в аккаунт для добавления в корзину");
-        navigate("/login");
-       }
-      } else {
-       alert("Неверное количество");
+      productsGrid.replaceChildren();
+      if (categoryFilter.options.length === 1) {
+        const categories = [...new Set(data.products.map(p => p.category))];
+        categories.forEach(cat => categoryFilter.add(new Option(cat, cat)));
       }
-     });
 
-     if (grid) grid.appendChild(card);
-   });
+      data.products.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "product-card";
 
-   // Рендерим пагинацию
-   renderPagination(data.total, data.page, Math.ceil(data.total / ITEMS_PER_PAGE));
+        const h3 = document.createElement("h3");
+        h3.textContent = product.title;
 
-   } catch (err) {
-   const grid = container.querySelector("#products-grid") as HTMLElement;
-   if (grid) {
-     grid.innerHTML = `
-      <div style="text-align: center; padding: 80px; color: #666;">
-       <div style="font-size: 4rem;">❌</div>
-       <h3>Ошибка загрузки товаров</h3>
-       <p>Попробуйте позже</p>
-      </div>
-     `;
-   }
-  }
+        const price = document.createElement("p");
+        price.textContent = `${product.price.toFixed(2)} Br`;
+
+        const desc = document.createElement("p");
+        desc.textContent = product.description;
+
+        const cat = document.createElement("p");
+        cat.textContent = `Категория: ${product.category}`;
+
+        const stock = document.createElement("p");
+        stock.className = "stock-info";
+        stock.innerHTML = `В наличии: <strong>${product.stock}</strong> шт`;
+
+        const addToCartDiv = document.createElement("div");
+        addToCartDiv.className = "add-to-cart";
+
+        const qtyInput = document.createElement("input");
+        qtyInput.type = "number";
+        qtyInput.min = "1";
+        qtyInput.max = product.stock.toString();
+        qtyInput.value = "1";
+        qtyInput.className = "quantity-input";
+
+        const addBtn = document.createElement("button");
+        addBtn.className = "add-btn";
+        addBtn.textContent = "Добавить в корзину";
+
+        addBtn.onclick = async () => {
+          const quantity = parseInt(qtyInput.value) || 1;
+          if (quantity > 0 && quantity <= product.stock) {
+            try {
+              await api.cart.add({ productId: product.id, quantity });
+              await updateCartBadge();
+              alert("✅ Добавлено в корзину!");
+            } catch {
+              alert("Войдите в аккаунт");
+              navigate("/login");
+            }
+          } else {
+            alert("Неверное количество");
+          }
+        };
+
+        addToCartDiv.append(qtyInput, addBtn);
+        card.append(h3, price, desc, cat, stock, addToCartDiv);
+        productsGrid.append(card);
+      });
+
+      renderPagination(data.total, currentPage, Math.ceil(data.total / ITEMS_PER_PAGE));
+
+    } catch (err) {
+      productsGrid.replaceChildren();
+      const errBox = document.createElement("h3");
+      errBox.textContent = "❌ Ошибка загрузки";
+      productsGrid.append(errBox);
+    }
   };
 
   const renderPagination = (total: number, current: number, totalPages: number) => {
-   const pagination = container.querySelector("#pagination") as HTMLElement;
-   if (!pagination) return;
+    paginationDiv.replaceChildren();
+    if (totalPages <= 1) return;
 
-   if (totalPages <= 1) {
-   pagination.innerHTML = "";
-   return;
-   }
+    const nav = document.createElement("div");
+    nav.className = "pagination-container";
 
-   let paginationHTML = `
-   <div class="pagination-container">
-     <button class="pagination-btn ${current === 1 ? 'disabled' : ''}" data-page="${current - 1}">‹ Предыдущая</button>
-   `;
+    const createBtn = (text: string, page: number, isDisabled: boolean, isActive: boolean = false) => {
+      const btn = document.createElement("button");
+      btn.className = `pagination-btn ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}`;
+      btn.textContent = text;
+      
+      if (!isDisabled && page !== current) {
+        btn.onclick = (e) => {
+          e.preventDefault();
+          loadProducts(page);
+          filtersDiv.scrollIntoView({ behavior: 'smooth' });
+        };
+      }
+      return btn;
+    };
 
-   const start = Math.max(1, current - 1);
-   const end = Math.min(totalPages, current + 1);
+    nav.append(createBtn("‹ Предыдущая", current - 1, current === 1));
 
-   for (let i = start; i <= end; i++) {
-   paginationHTML += `
-     <button class="pagination-btn ${i === current ? 'active' : ''}" data-page="${i}">${i}</button>
-   `;
-   }
+    const start = Math.max(1, current - 1);
+    const end = Math.min(totalPages, current + 1);
 
-   paginationHTML += `
-     <button class="pagination-btn ${current === totalPages ? 'disabled' : ''}" data-page="${current + 1}">Следующая ›</button>
-     <span class="pagination-info">Страница ${current} из ${totalPages} (${total} товаров)</span>
-   </div>
-   `;
+    for (let i = start; i <= end; i++) {
+      nav.append(createBtn(i.toString(), i, false, i === current));
+    }
 
-   pagination.innerHTML = paginationHTML;
+    nav.append(createBtn("Следующая ›", current + 1, current === totalPages));
 
-   // Обработчики кнопок пагинации
-   pagination.querySelectorAll(".pagination-btn").forEach(btn => {
-   btn.addEventListener("click", (e: Event) => {
-     e.preventDefault();
-     const page = parseInt((btn as HTMLElement).dataset.page || "1");
-     if (!isNaN(page) && page !== currentPage) {
-      loadProducts(page);
-     }
-   });
-   });
+    const info = document.createElement("span");
+    info.className = "pagination-info";
+    info.textContent = `Страница ${current} из ${totalPages} (${total} товаров)`;
+    nav.append(info);
+
+    paginationDiv.append(nav);
   };
 
-  // Фильтры - сбрасываем на первую страницу
-  container.querySelector("#search-input")?.addEventListener("input", () => loadProducts(1));
-  container.querySelector("#category-filter")?.addEventListener("change", () => loadProducts(1));
-  container.querySelector("#stock-filter")?.addEventListener("change", () => loadProducts(1));
-  container.querySelector("#sort-filter")?.addEventListener("change", () => loadProducts(1));
+  searchInput.oninput = () => loadProducts(1);
+  categoryFilter.onchange = () => loadProducts(1);
+  stockFilter.onchange = () => loadProducts(1);
+  sortFilter.onchange = () => loadProducts(1);
 
-  loadProducts(1); // первая загрузка
+  loadProducts(1);
 
   return container;
 };

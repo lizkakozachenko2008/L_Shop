@@ -6,7 +6,7 @@
     "price": 77,
     "discountPercentage": 15,
     "rating": 4.8,
-    "stock": 34,
+    "stock": 28,
     "brand": "Lunar Beauty",
     "category": "Уход за лицом"
   },
@@ -28,7 +28,7 @@
     "price": 55,
     "discountPercentage": 10,
     "rating": 4.7,
-    "stock": 30,
+    "stock": 29,
     "brand": "Round Lab",
     "category": "Уход за лицом"
   },

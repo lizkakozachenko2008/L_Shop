@@ -9,62 +9,78 @@ export const LoginPage = (): HTMLElement => {
     try {
       const res = await api.auth.me();
       await handleResponse(res);
-      navigate("/"); // уже залогинен — на главную
-      return true;
+      navigate("/");
     } catch {
-      // не авторизован — показываем форму
-      return false;
     }
   };
 
   checkAuthAndRedirect();
+  const logo = document.createElement("h1");
+  logo.textContent = "Lunar Glow";
 
-  container.innerHTML = `
-    <h1>Lunar Glow</h1>
-    <form data-registration class="auth-form">
-      <h2 id="form-title">Вход</h2>
-      <input type="text" id="name-input" placeholder="Имя" style="display: none;">
-      <input type="email" id="email-input" placeholder="Email" required>
-      <input type="tel" id="phone-input" placeholder="Телефон (опционально)" style="display: none;">
-      <input type="password" id="password-input" placeholder="Пароль" required>
-      <button type="submit" id="submit-btn">Войти</button>
-      <p id="toggle-text">Нет аккаунта? <a href="#" id="toggle-link">Регистрация</a></p>
-    </form>
-  `;
+  const form = document.createElement("form");
+  form.className = "auth-form";
 
-  const form = container.querySelector("form")!;
-  const nameInput = container.querySelector("#name-input") as HTMLInputElement;
-  const phoneInput = container.querySelector("#phone-input") as HTMLInputElement;
-  const emailInput = container.querySelector("#email-input") as HTMLInputElement;
-  const passwordInput = container.querySelector("#password-input") as HTMLInputElement;
-  const title = container.querySelector("#form-title")!;
-  const submitBtn = container.querySelector("#submit-btn")!;
-  const toggleLink = container.querySelector("#toggle-link") as HTMLAnchorElement;
-  const toggleText = container.querySelector("#toggle-text")!;
+  const title = document.createElement("h2");
+  title.textContent = "Вход";
 
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.placeholder = "Имя";
+  nameInput.style.display = "none";
+
+  const emailInput = document.createElement("input");
+  emailInput.type = "email";
+  emailInput.placeholder = "Email";
+  emailInput.required = true;
+
+  const phoneInput = document.createElement("input");
+  phoneInput.type = "tel";
+  phoneInput.placeholder = "Телефон (опционально)";
+  phoneInput.style.display = "none";
+
+  const passwordInput = document.createElement("input");
+  passwordInput.type = "password";
+  passwordInput.placeholder = "Пароль";
+  passwordInput.required = true;
+
+  const submitBtn = document.createElement("button");
+  submitBtn.type = "submit";
+  submitBtn.textContent = "Войти";
+
+  const toggleText = document.createElement("p");
+  const toggleLink = document.createElement("a");
+  toggleLink.href = "#";
+  toggleLink.textContent = "Регистрация";
+
+  const prefixText = document.createTextNode("Нет аккаунта? ");
+  toggleText.append(prefixText, toggleLink);
+
+  // Сборка DOM
+  form.append(title, nameInput, emailInput, phoneInput, passwordInput, submitBtn, toggleText);
+  container.append(logo, form);
+
+  // --- Логика переключения Регистрация / Вход ---
   let isRegister = false;
 
   const updateToggleMode = () => {
+    isRegister = !isRegister;
+
     title.textContent = isRegister ? "Регистрация" : "Вход";
-    nameInput.style.display = isRegister ? "block" : "none";
-    phoneInput.style.display = isRegister ? "block" : "none";
     submitBtn.textContent = isRegister ? "Зарегистрироваться" : "Войти";
-    toggleText.innerHTML = isRegister 
-      ? "Уже есть аккаунт? <a href=\"#\" id=\"toggle-link\">Вход</a>" 
-      : "Нет аккаунта? <a href=\"#\" id=\"toggle-link\">Регистрация</a>";
     
-    // Перепривязываем listener к новому link
-    const newToggleLink = toggleText.querySelector("#toggle-link") as HTMLAnchorElement;
-    newToggleLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      isRegister = !isRegister;
-      updateToggleMode();
-    });
+    // Показываем/скрываем поля
+    const displayMode = isRegister ? "block" : "none";
+    nameInput.style.display = displayMode;
+    phoneInput.style.display = displayMode;
+    
+    // Обновляем текст ссылки
+    prefixText.textContent = isRegister ? "Уже есть аккаунт? " : "Нет аккаунта? ";
+    toggleLink.textContent = isRegister ? "Вход" : "Регистрация";
   };
 
   toggleLink.addEventListener("click", (e) => {
     e.preventDefault();
-    isRegister = !isRegister;
     updateToggleMode();
   });
 

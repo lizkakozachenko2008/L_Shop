@@ -113,5 +113,77 @@
     "paymentMethod": "card",
     "createdAt": 1773331171197,
     "status": "new"
+  },
+  {
+    "id": "cd0ee23d-418d-46f6-8868-7c3a82fa034c",
+    "userId": "85b12c2e-aefa-444a-8603-40e4a13c7800",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 3,
+        "priceAtPurchase": 77
+      }
+    ],
+    "totalAmount": 231,
+    "deliveryAddress": "ss",
+    "deliveryPhone": "+375296903042",
+    "deliveryEmail": "kolosovichyauheni@gmail.com",
+    "paymentMethod": "card",
+    "createdAt": 1773993459216,
+    "status": "new"
+  },
+  {
+    "id": "ccafb041-faad-4647-8258-bbc79af9db44",
+    "userId": "85b12c2e-aefa-444a-8603-40e4a13c7800",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 1,
+        "priceAtPurchase": 77
+      }
+    ],
+    "totalAmount": 77,
+    "deliveryAddress": "s",
+    "deliveryPhone": "+375296903042",
+    "deliveryEmail": "kolosovichyauheni@gmail.com",
+    "paymentMethod": "card",
+    "createdAt": 1773993481392,
+    "status": "new"
+  },
+  {
+    "id": "1db69a23-2d85-4e05-a195-3db7f9e7ddff",
+    "userId": "85b12c2e-aefa-444a-8603-40e4a13c7800",
+    "items": [
+      {
+        "productId": "1",
+        "quantity": 2,
+        "priceAtPurchase": 77
+      }
+    ],
+    "totalAmount": 154,
+    "deliveryAddress": "о",
+    "deliveryPhone": "+375296903042",
+    "deliveryEmail": "kolosovichyauheni@gmail.com",
+    "paymentMethod": "card",
+    "createdAt": 1774036566661,
+    "status": "new"
+  },
+  {
+    "id": "ab166ab6-f65d-4830-8cda-cf44fedc47da",
+    "userId": "85b12c2e-aefa-444a-8603-40e4a13c7800",
+    "items": [
+      {
+        "productId": "3",
+        "quantity": 1,
+        "priceAtPurchase": 55
+      }
+    ],
+    "totalAmount": 55,
+    "deliveryAddress": "ор",
+    "deliveryPhone": "+375296903042",
+    "deliveryEmail": "kolosovichyauheni@gmail.com",
+    "paymentMethod": "card",
+    "createdAt": 1774857867567,
+    "status": "new"
   }
 ]

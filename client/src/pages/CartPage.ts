@@ -1,6 +1,6 @@
 import type { Product } from "../types/Product";
 import { api, handleResponse } from "../services/api";
-import { navigate } from "../router/router";
+import { navigate, updateCartBadge } from "../router/router";
 
 export const CartPage = (): HTMLElement => {
   const container = document.createElement("div");
@@ -8,244 +8,227 @@ export const CartPage = (): HTMLElement => {
 
   let selectedItems: string[] = JSON.parse(localStorage.getItem("cartSelectedItems") || "[]");
   let cartData: { items: { product: Product; quantity: number }[] } = { items: [] };
-  let handlersSetup = false;
 
-  const updateTotal = () => {
-    const selected = cartData.items.filter(item => selectedItems.includes(item.product.id.toString()));
-    const total = selected.reduce((sum: number, item) => sum + item.product.price * item.quantity, 0);
+  // --- ЭЛЕМЕНТЫ ИНТЕРФЕЙСА ---
+  const header = document.createElement("div");
+  header.className = "cart-header";
+  
+  const title = document.createElement("h2");
+  title.textContent = "🛒 Корзина";
+  
+  const actions = document.createElement("div");
+  actions.className = "cart-actions";
+  
+  const selectAllLabel = document.createElement("label");
+  selectAllLabel.className = "select-all";
+  const selectAllCheckbox = document.createElement("input");
+  selectAllCheckbox.type = "checkbox";
+  selectAllCheckbox.id = "select-all";
+  selectAllLabel.append(selectAllCheckbox, document.createTextNode(" Выбрать все"));
+  
+  const deleteSelectedBtn = document.createElement("button");
+  deleteSelectedBtn.id = "delete-selected";
+  deleteSelectedBtn.className = "delete-selected-btn";
+  deleteSelectedBtn.textContent = "Удалить выбранные";
+  deleteSelectedBtn.disabled = true;
 
-    const totalEl = container.querySelector("#cart-total") as HTMLElement;
-    const countEl = container.querySelector("#selected-count") as HTMLElement;
-    const checkoutBtn = container.querySelector("#checkout-btn") as HTMLButtonElement;
-    const deleteSelectedBtn = container.querySelector("#delete-selected") as HTMLButtonElement;
+  actions.append(selectAllLabel, deleteSelectedBtn);
+  header.append(title, actions);
 
-    if (totalEl) totalEl.textContent = `${total.toFixed(2)} Br`;
-    if (countEl) countEl.textContent = `${selected.length}`;
-    if (checkoutBtn) checkoutBtn.disabled = selected.length === 0;
-    if (deleteSelectedBtn) deleteSelectedBtn.disabled = selected.length === 0;
+  const layout = document.createElement("div");
+  layout.className = "cart-layout";
 
-    localStorage.setItem("cartSelectedItems", JSON.stringify(selectedItems));
+  const itemsSection = document.createElement("div");
+  itemsSection.className = "cart-items-section";
+  const itemsContainer = document.createElement("div");
+  itemsContainer.className = "cart-items";
+  itemsContainer.id = "cart-items";
+  itemsSection.append(itemsContainer);
+
+  const summarySection = document.createElement("div");
+  summarySection.className = "cart-summary";
+  const totalBox = document.createElement("div");
+  totalBox.className = "total-section";
+
+  const createTotalRow = (label: string, valueId: string) => {
+    const row = document.createElement("div");
+    row.className = "total-row";
+    const spanLabel = document.createElement("span");
+    spanLabel.textContent = label;
+    const spanValue = document.createElement("span");
+    spanValue.id = valueId;
+    spanValue.textContent = "0";
+    row.append(spanLabel, spanValue);
+    return spanValue;
   };
 
-  // UI
-  container.innerHTML = `
-    <div class="cart-header">
-      <h2>🛒 Корзина</h2>
-      <div class="cart-actions">
-        <label class="select-all">
-          <input type="checkbox" id="select-all"> Выбрать все
-        </label>
-        <button id="delete-selected" class="delete-selected-btn" disabled>Удалить выбранные</button>
-      </div>
-    </div>
+  const countVal = createTotalRow("Выбрано товаров:", "selected-count");
+  const totalVal = createTotalRow("Итого:", "cart-total");
+  totalVal.className = "grand-total";
+
+  const checkoutBtn = document.createElement("button");
+  checkoutBtn.id = "checkout-btn";
+  checkoutBtn.className = "checkout-btn-large";
+  checkoutBtn.textContent = "Оформить заказ";
+  checkoutBtn.disabled = true;
+
+  totalBox.append(countVal.parentElement!, totalVal.parentElement!, checkoutBtn);
+  summarySection.append(totalBox);
+  layout.append(itemsSection, summarySection);
+  container.append(header, layout);
+
+  // --- ЛОГИКА ОБНОВЛЕНИЯ ---
+  const updateTotal = () => {
+    const selected = cartData.items.filter(item => selectedItems.includes(item.product.id.toString()));
+    const total = selected.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+    totalVal.textContent = `${total.toFixed(2)} Br`;
+    countVal.textContent = `${selected.length}`;
     
-    <div class="cart-layout">
-      <div class="cart-items-section">
-        <div class="cart-items" id="cart-items">
-          <div style="text-align: center; padding: 80px; color: #666;">
-            <div style="font-size: 4rem;">🛒</div>
-            <p>Загрузка корзины...</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="cart-summary">
-        <div class="total-section">
-          <div class="total-row">
-            <span>Выбрано товаров:</span>
-            <span id="selected-count">0</span>
-          </div>
-          <div class="total-row">
-            <span>Итого:</span>
-            <span id="cart-total" class="grand-total">0 Br</span>
-          </div>
-          <button id="checkout-btn" class="checkout-btn-large" disabled>Оформить заказ</button>
-        </div>
-      </div>
-    </div>
-  `;
+    const hasSelected = selected.length > 0;
+    checkoutBtn.disabled = !hasSelected;
+    deleteSelectedBtn.disabled = !hasSelected;
 
-  const renderItems = (items: { product: Product; quantity: number }[]) => {
-    const itemsContainer = container.querySelector("#cart-items") as HTMLElement;
-    if (!itemsContainer) return;
+    localStorage.setItem("cartSelectedItems", JSON.stringify(selectedItems));
+    
+    // Синхронизация чекбокса "Выбрать все"
+    selectAllCheckbox.checked = cartData.items.length > 0 && selectedItems.length === cartData.items.length;
+  };
 
-    itemsContainer.innerHTML = "";
+  const renderItems = () => {
+    itemsContainer.innerHTML = ""; // Очистка перед рендером
 
-    if (items.length === 0) {
-      itemsContainer.innerHTML = `
-        <div style="text-align: center; padding: 80px 20px; color: #666;">
-          <div style="font-size: 4rem; margin-bottom: 20px;">🛒</div>
-          <h3>Корзина пуста</h3>
-          <p>Добавьте товары из каталога</p>
-          <a href="/" style="color: #a78bfa; text-decoration: underline; font-size: 18px;">На главную</a>
-        </div>
-      `;
-      updateTotal();
+    if (cartData.items.length === 0) {
+      const emptyMsg = document.createElement("div");
+      emptyMsg.style.cssText = "text-align: center; padding: 60px; color: #666;";
+      emptyMsg.innerHTML = `<div style="font-size: 3rem;">🛒</div><h3>Корзина пуста</h3>`;
+      const goHome = document.createElement("button");
+      goHome.textContent = "На главную";
+      goHome.style.cssText = "margin-top: 15px; cursor: pointer; color: #a78bfa; border: none; background: none; text-decoration: underline;";
+      goHome.onclick = () => navigate("/");
+      emptyMsg.append(goHome);
+      itemsContainer.append(emptyMsg);
       return;
     }
 
-    items.forEach(item => {
+    cartData.items.forEach(item => {
+      const id = item.product.id.toString();
       const card = document.createElement("div");
       card.className = "cart-item";
-      card.setAttribute("data-product-id", item.product.id.toString());
 
-      const productId = item.product.id.toString();
-      const isSelected = selectedItems.includes(productId);
-
-      card.innerHTML = `
-        <label class="item-checkbox">
-          <input type="checkbox" class="item-select" data-product-id="${productId}" ${isSelected ? 'checked' : ''}>
-        </label>
-        <div class="item-info">
-          <h3 data-title="basket">${item.product.title}</h3>
-          <p data-price="basket">${item.product.price.toFixed(2)} Br</p>
-          <p style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">
-            В наличии: ${item.product.stock} шт
-          </p>
-        </div>
-        <div class="quantity-controls" data-product-id="${productId}">
-          <button class="qty-btn minus-btn" data-product-id="${productId}">-</button>
-          <span class="quantity" data-product-id="${productId}">${item.quantity}</span>
-          <button class="qty-btn plus-btn" data-product-id="${productId}">+</button>
-        </div>
-        <div class="item-total-price" data-price="basket">
-          ${(item.product.price * item.quantity).toFixed(2)} Br
-        </div>
-        <button class="remove-btn" data-product-id="${productId}">×</button>
-      `;
-
-      itemsContainer.appendChild(card);
-    });
-  };
-
-  const setupEventHandlers = () => {
-    if (handlersSetup) return;
-    handlersSetup = true;
-
-    // Выбрать все
-    const selectAll = container.querySelector("#select-all") as HTMLInputElement;
-    selectAll?.addEventListener("change", (e: Event) => {
-      const checkboxes = container.querySelectorAll(".item-select") as NodeListOf<HTMLInputElement>;
-      selectedItems = [];
-      checkboxes.forEach(cb => {
-        cb.checked = (e.target as HTMLInputElement).checked;
-        if (cb.checked) selectedItems.push(cb.dataset.productId!);
-      });
-      updateTotal();
-    });
-
-    // Чекбоксы товаров
-    container.querySelectorAll(".item-select").forEach((checkbox: Element) => {
-      (checkbox as HTMLInputElement).addEventListener("change", () => {
-        const id = (checkbox as HTMLInputElement).dataset.productId!;
-        if ((checkbox as HTMLInputElement).checked) {
-          if (!selectedItems.includes(id)) selectedItems.push(id);
-        } else {
-          selectedItems = selectedItems.filter(i => i !== id);
-        }
+      // Чекбокс
+      const cbLabel = document.createElement("label");
+      cbLabel.className = "item-checkbox";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.className = "item-select";
+      cb.checked = selectedItems.includes(id);
+      cb.onchange = () => {
+        if (cb.checked) selectedItems.push(id);
+        else selectedItems = selectedItems.filter(sid => sid !== id);
         updateTotal();
+      };
+      cbLabel.append(cb);
 
-        const allChecked = Array.from(container.querySelectorAll(".item-select"))
-          .every(cb => (cb as HTMLInputElement).checked);
-        if (selectAll) selectAll.checked = allChecked && cartData.items.length > 0;
-      });
-    });
+      // Информация
+      const info = document.createElement("div");
+      info.className = "item-info";
+      const t = document.createElement("h3");
+      t.textContent = item.product.title;
+      const p = document.createElement("p");
+      p.textContent = `${item.product.price.toFixed(2)} Br`;
+      const s = document.createElement("p");
+      s.style.cssText = "color: #666; font-size: 0.8rem;";
+      s.textContent = `В наличии: ${item.product.stock}`;
+      info.append(t, p, s);
 
-    // Кнопки количества
-    container.querySelectorAll(".qty-btn").forEach((btn: Element) => {
-      (btn as HTMLButtonElement).addEventListener("click", async () => {
-        const productId = (btn as HTMLButtonElement).dataset.productId!;
-        const item = cartData.items.find(i => i.product.id.toString() === productId);
-        if (!item) return;
-
-        const isPlus = btn.classList.contains("plus-btn");
-        let newQty = item.quantity + (isPlus ? 1 : -1);
-        if (newQty < 1) newQty = 1;
-        if (newQty > item.product.stock) newQty = item.product.stock;
-
-        await api.cart.update(item.product.id, newQty);
-        navigate("/cart"); // обновит header (новый fetch count) и страницу
-      });
-    });
-
-    // Удаление одной позиции
-    container.querySelectorAll(".remove-btn").forEach((btn: Element) => {
-      (btn as HTMLButtonElement).addEventListener("click", async () => {
-        const productId = (btn as HTMLButtonElement).dataset.productId!;
-        selectedItems = selectedItems.filter(id => id !== productId);
-        await api.cart.remove(productId);
-        navigate("/cart"); // обновит header и страницу
-      });
-    });
-
-    // Удалить выбранные
-    const deleteSelectedBtn = container.querySelector("#delete-selected") as HTMLButtonElement;
-    if (deleteSelectedBtn) {
-      deleteSelectedBtn.addEventListener("click", async () => {
-        if (selectedItems.length === 0) return;
-
-        for (const id of selectedItems) {
-          await api.cart.remove(id);
+      // Управление количеством
+      const controls = document.createElement("div");
+      controls.className = "quantity-controls";
+      
+      const btnMinus = document.createElement("button");
+      btnMinus.className = "qty-btn";
+      btnMinus.textContent = "-";
+      btnMinus.onclick = async () => {
+        if (item.quantity > 1) {
+          await api.cart.update(item.product.id, item.quantity - 1);
+          loadCart(); // Перезагружаем для актуальности данных
         }
+      };
 
-        selectedItems = [];
-        navigate("/cart"); // обновит header и страницу
-      });
-    }
+      const qtyShow = document.createElement("span");
+      qtyShow.className = "quantity";
+      qtyShow.textContent = item.quantity.toString();
+
+      const btnPlus = document.createElement("button");
+      btnPlus.className = "qty-btn";
+      btnPlus.textContent = "+";
+      btnPlus.onclick = async () => {
+        if (item.quantity < item.product.stock) {
+          await api.cart.update(item.product.id, item.quantity + 1);
+          loadCart();
+        }
+      };
+      controls.append(btnMinus, qtyShow, btnPlus);
+
+      // Итоговая цена позиции
+      const itemTotal = document.createElement("div");
+      itemTotal.className = "item-total-price";
+      itemTotal.textContent = `${(item.product.price * item.quantity).toFixed(2)} Br`;
+
+      // Удаление
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "remove-btn";
+      removeBtn.textContent = "×";
+      removeBtn.onclick = async () => {
+        await api.cart.remove(id);
+        selectedItems = selectedItems.filter(sid => sid !== id);
+        loadCart();
+      };
+
+      card.append(cbLabel, info, controls, itemTotal, removeBtn);
+      itemsContainer.append(card);
+    });
   };
 
   const loadCart = async () => {
-    handlersSetup = false;
-
-    const itemsContainer = container.querySelector("#cart-items") as HTMLElement;
-    if (itemsContainer) {
-      itemsContainer.innerHTML = `
-        <div style="text-align: center; padding: 80px; color: #666;">
-          <div style="font-size: 4rem;">🛒</div>
-          <p>Загрузка корзины...</p>
-        </div>
-      `;
-    }
-
     try {
       const res = await api.cart.get();
-      const data = await handleResponse<{ items: { product: Product; quantity: number }[]; totalItems: number }>(res);
-
-      cartData = { items: data.items };
-      renderItems(data.items);
-      setupEventHandlers();
+      const data = await handleResponse<{ items: { product: Product; quantity: number }[] }>(res);
+      cartData.items = data.items;
+      renderItems();
       updateTotal();
-
-      const selectAll = container.querySelector("#select-all") as HTMLInputElement;
-      if (selectAll) {
-        const allChecked = cartData.items.every(item => selectedItems.includes(item.product.id.toString()));
-        selectAll.checked = allChecked;
-      }
+      updateCartBadge(); // Обновляем иконку в хедере
     } catch (err) {
-      if (itemsContainer) {
-        itemsContainer.innerHTML = `
-          <div style="text-align: center; padding: 80px; color: #666;">
-            <h3>Корзина пуста или требуется вход</h3>
-            <p>Попробуйте войти заново</p>
-            <a href="/login" style="color: #a78bfa; text-decoration: underline;">Вход</a>
-          </div>
-        `;
-      }
-      updateTotal();
+      itemsContainer.textContent = "Ошибка загрузки корзины или требуется авторизация.";
     }
   };
 
-  // Checkout button
-  const checkoutBtn = container.querySelector("#checkout-btn") as HTMLButtonElement;
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-      if (selectedItems.length === 0) return;
-      localStorage.setItem("checkoutItems", JSON.stringify(selectedItems));
-      navigate("/checkout");
-    });
-  }
+  // --- СОБЫТИЯ ВЕРХНЕГО УРОВНЯ ---
+  selectAllCheckbox.onchange = () => {
+    if (selectAllCheckbox.checked) {
+      selectedItems = cartData.items.map(i => i.product.id.toString());
+    } else {
+      selectedItems = [];
+    }
+    renderItems();
+    updateTotal();
+  };
+
+  deleteSelectedBtn.onclick = async () => {
+    if (!confirm("Удалить выбранные товары?")) return;
+    for (const id of selectedItems) {
+      await api.cart.remove(id);
+    }
+    selectedItems = [];
+    loadCart();
+  };
+
+  checkoutBtn.onclick = () => {
+    localStorage.setItem("checkoutItems", JSON.stringify(selectedItems));
+    navigate("/checkout");
+  };
 
   loadCart();
-
   return container;
 };

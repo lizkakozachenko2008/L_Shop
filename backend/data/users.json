@@ -16,5 +16,14 @@
     "passwordHash": "$2b$10$BVkL5lGE0JOPmKj.gF5ICuHYNMiH3jOPhK5Phj6wuLl8ebM6sM.RO",
     "sessionId": "fb570227-1efc-4579-ae89-6b99514d4f21",
     "sessionExpires": 1773331775432
+  },
+  {
+    "id": "85b12c2e-aefa-444a-8603-40e4a13c7800",
+    "name": "Евгений",
+    "email": "kolosovichyauheni@gmail.com",
+    "phone": "+375296903042",
+    "passwordHash": "$2b$10$DDteXgqIoys2G7XpGQkQBuXQ06S2EiSH.6hR3g8Ni6349lshyoiA6",
+    "sessionId": "861b77c6-2f3d-4714-a569-f89db9f7cd83",
+    "sessionExpires": 1774858633231
   }
 ]

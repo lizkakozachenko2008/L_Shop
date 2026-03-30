@@ -53,36 +53,13 @@ const renderPage = async () => {
 
   let header: HTMLElement;
   try {
-    header = await Header();
+    // Header is a class — construct it and call render()
+    const headerInstance = new Header();
+    header = await headerInstance.render();
   } catch (err) {
     console.error("Ошибка Header — fallback:", err);
-    header = document.createElement("header");
-    header.className = "header";
-    header.innerHTML = `
-      <div class="header-content container">
-        <div class="header-left">
-          <h1><a href="/" id="logo">Lunar Glow</a></h1>
-        </div>
-        <nav class="header-nav">
-          <a href="/" id="home-link">Главная</a>
-          <a href="/login" id="login-link">Вход / Регистрация</a>
-          <a href="/cart" id="cart-link" class="cart-link">
-            <svg class="cart-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.7 13.5a2 2 0 0 0 2 1.5h10.6a2 2 0 0 0 2-1.5L23 4H6"/>
-            </svg>
-            <span class="cart-badge">0</span>
-          </a>
-        </nav>
-      </div>
-    `;
-    header.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        navigate(link.getAttribute("href") || "/");
-      });
-    });
+    // Use Header.createFallback() to provide a safe fallback header
+    header = Header.createFallback();
   }
 
   const main = document.createElement("main");
