@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import { readJsonFile, writeJsonFile } from "../utils/jsonUtils";
+
+import { RequestWithUser } from "../types/RequestWithUser";
 import { User } from "../types/User";
 import { RegisterDTO } from "../types/RegisterDTO";
 import { LoginDTO } from "../types/LoginDTO";
@@ -11,7 +13,7 @@ const USERS_FILE = "users.json";
 const getUsers = async () => await readJsonFile<User[]>(USERS_FILE);
 const saveUsers = async (users: User[]) => await writeJsonFile(USERS_FILE, users);
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request<{}, {}, RegisterDTO>, res: Response) => {
   const { name, email, phone, password }: RegisterDTO = req.body;
 
   if (!name || !email || !password) {
@@ -45,7 +47,7 @@ export const register = async (req: Request, res: Response) => {
   });
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request<{}, {}, LoginDTO>, res: Response) => {
   const { email, password }: LoginDTO = req.body;
 
   if (!email || !password) {
@@ -87,14 +89,14 @@ const createSession = async (user: User, res: Response) => {
   });
 };
 
-export const me = async (req: Request, res: Response) => {
-  const user = (req as any).user as User;
+export const me = async (req: RequestWithUser, res: Response) => {
+  const user = req.user;
   if (!user) return res.status(401).json({ message: "Не авторизован" });
 
   res.json({ user: { id: user.id, name: user.name, email: user.email } });
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req: RequestWithUser, res: Response) => {
   const sessionId = req.cookies.sessionId;
   if (sessionId) {
     const users = await getUsers();

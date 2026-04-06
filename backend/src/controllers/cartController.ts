@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
+import { v4 as uuidv4 } from "uuid";
 import { readJsonFile, writeJsonFile } from "../utils/jsonUtils";
-import { Cart, CartItem } from "../types/Cart";
+import { Cart, CartItem, AddToCartDTO, UpdateCartItemDTO } from "../types/Cart";
 import { Product } from "../types/Product";
+import { RequestWithUser } from "../types/RequestWithUser";
 import { User } from "../types/User";
 
 const CARTS_FILE = "carts.json";
@@ -27,11 +29,11 @@ const getProducts = async (): Promise<Product[]> => {
   }
 };
 
-export const getCart = async (req: Request, res: Response) => {
+export const getCart = async (req: RequestWithUser, res: Response) => {
   try {
-    console.log('🔍 GET /api/cart — user:', (req as any).user);
+    console.log('🔍 GET /api/cart — user:', req.user);
     
-    const user = (req as any).user as User | undefined;
+    const user = req.user as User | undefined;
     
     if (!user) {
       console.log('👤 Гость — пустая корзина');
@@ -42,7 +44,7 @@ export const getCart = async (req: Request, res: Response) => {
     let cart = carts.find(c => c.userId === user.id);
 
     if (!cart) {
-      cart = { userId: user.id, items: [] };
+      cart = { id: uuidv4(), userId: user.id, items: [] };
       carts.push(cart);
       await saveCarts(carts);
     }
@@ -66,14 +68,14 @@ export const getCart = async (req: Request, res: Response) => {
   }
 };
 
-export const addToCart = async (req: Request, res: Response) => {
+export const addToCart = async (req: RequestWithUser<AddToCartDTO>, res: Response) => {
   try {
-    const user = (req as any).user as User | undefined;
+    const user = req.user as User | undefined;
     if (!user) {
       return res.status(401).json({ message: "Необходима авторизация" });
     }
 
-    const { productId, quantity = 1 }: { productId: string; quantity?: number } = req.body;
+    const { productId, quantity = 1 } = req.body;
 
     if (!productId || quantity < 1) {
       return res.status(400).json({ message: "Неверные данные" });
@@ -89,7 +91,7 @@ export const addToCart = async (req: Request, res: Response) => {
     let cart = carts.find(c => c.userId === user.id);
 
     if (!cart) {
-      cart = { userId: user.id, items: [] };
+      cart = { id: uuidv4(), userId: user.id, items: [] };
       carts.push(cart);
     }
 
@@ -108,15 +110,15 @@ export const addToCart = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCartItem = async (req: Request, res: Response) => {
+export const updateCartItem = async (req: RequestWithUser<UpdateCartItemDTO>, res: Response) => {
   try {
-    const user = (req as any).user as User | undefined;
+    const user = req.user as User | undefined;
     if (!user) {
       return res.status(401).json({ message: "Необходима авторизация" });
     }
 
     const { productId } = req.params;
-    const { quantity }: { quantity: number } = req.body;
+    const { quantity } = req.body;
 
     if (quantity < 0) {
       return res.status(400).json({ message: "Количество не может быть отрицательным" });
@@ -156,9 +158,9 @@ export const updateCartItem = async (req: Request, res: Response) => {
   }
 };
 
-export const removeFromCart = async (req: Request, res: Response) => {
+export const removeFromCart = async (req: RequestWithUser, res: Response) => {
   try {
-    const user = (req as any).user as User | undefined;
+    const user = req.user as User | undefined;
     if (!user) {
       return res.status(401).json({ message: "Необходима авторизация" });
     }

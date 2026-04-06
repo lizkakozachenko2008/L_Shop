@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { readJsonFile, writeJsonFile } from "../utils/jsonUtils";
-import { Order } from "../types/Order";
+import { RequestWithUser } from "../types/RequestWithUser";
+import { Order, CreateOrderDTO } from "../types/Order";
 import { Product } from "../types/Product";
 import { User } from "../types/User";
 import { Cart } from "../types/Cart";
@@ -17,21 +18,15 @@ const saveProducts = async (products: Product[]) => await writeJsonFile(PRODUCTS
 const getCarts = async () => await readJsonFile<Cart[]>(CARTS_FILE);
 const saveCarts = async (carts: Cart[]) => await writeJsonFile(CARTS_FILE, carts);
 
-export const createOrder = async (req: Request, res: Response) => {
+export const createOrder = async (req: RequestWithUser<CreateOrderDTO>, res: Response) => {
   try {
-    const user = (req as any).user as User;
+    const user = req.user as User;
     const {
       deliveryAddress,
       deliveryPhone,
       deliveryEmail,
       paymentMethod,
       selectedItems // ✅ ПОЛУЧАЕМ ВЫБРАННЫЕ ТОВАРЫ ИЗ ТЕЛА ЗАПРОСА
-    }: {
-      deliveryAddress: string;
-      deliveryPhone: string;
-      deliveryEmail: string;
-      paymentMethod: string;
-      selectedItems?: string[]; // ✅ МАССИВ ID ВЫБРАННЫХ ТОВАРОВ
     } = req.body;
 
     if (!deliveryAddress || !deliveryPhone || !deliveryEmail || !paymentMethod) {
@@ -136,9 +131,9 @@ export const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserOrders = async (req: Request, res: Response) => {
+export const getUserOrders = async (req: RequestWithUser, res: Response) => {
   try {
-    const user = (req as any).user as User;
+    const user = req.user as User;
     const orders = await getOrders();
     const userOrders = orders
       .filter(o => o.userId === user.id)
