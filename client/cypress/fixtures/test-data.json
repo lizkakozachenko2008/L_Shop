@@ -1,0 +1,11 @@
+{
+  "validUser": {
+    "name": "Cypress Тестер",
+    "email": "cypress@test.com",
+    "password": "cypress123"
+  },
+  "invalidUser": {
+    "email": "nonexistent@no.no",
+    "password": "wrongpassword"
+  }
+}
